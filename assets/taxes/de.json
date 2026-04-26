@@ -1,0 +1,123 @@
+{
+  "country": "DE",
+  "currency": "EUR",
+  "personalAllowance": {
+    "amount": 1230,
+    "phaseOutStart": null,
+    "phaseOutEnd": null
+  },
+  "deductions": {
+    "employeeAllowance": 1230,
+    "investorAllowance": 1000,
+    "socialSecurityAllowance": null,
+    "childAllowance": 4800,
+    "lumpSumSpecialExpense": 36,
+    "alimonyMaxDeductible": 13805,
+    "educationExpenseLimit": 5000,
+    "childEducationExpense": 1200,
+    "remoteWorkPerDay": 6,
+    "remoteWorkMax": 1260,
+    "unemploymentInsuranceMaxDeductible": 1900,
+    "pensionSchemeMaxDeductible": 29344
+  },
+  "filingStatuses": {
+    "single": {
+      "standardDeduction": 0,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 12096,
+          "rate": 0
+        },
+        {
+          "min": 12097,
+          "max": 68429,
+          "rate": 0.14
+        },
+        {
+          "min": 68430,
+          "max": 277825,
+          "rate": 0.42
+        },
+        {
+          "min": 277826,
+          "max": null,
+          "rate": 0.45
+        }
+      ]
+    },
+    "married_jointly": {
+      "standardDeduction": 0,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 24192,
+          "rate": 0
+        },
+        {
+          "min": 24193,
+          "max": 136858,
+          "rate": 0.14
+        },
+        {
+          "min": 136860,
+          "max": 555650,
+          "rate": 0.42
+        },
+        {
+          "min": 555652,
+          "max": null,
+          "rate": 0.45
+        }
+      ]
+    }
+  },
+  "brackets": [
+    {
+      "min": 0,
+      "max": 12096,
+      "rate": 0
+    },
+    {
+      "min": 12097,
+      "max": 68429,
+      "rate": 0.14
+    },
+    {
+      "min": 68430,
+      "max": 277825,
+      "rate": 0.42
+    },
+    {
+      "min": 277826,
+      "max": null,
+      "rate": 0.45
+    }
+  ],
+  "extraTaxes": [
+    {
+      "name": "Pension Insurance",
+      "type": "capped",
+      "rate": 0.093,
+      "cap": 96600
+    },
+    {
+      "name": "Unemployment Insurance",
+      "type": "capped",
+      "rate": 0.013,
+      "cap": 96600
+    },
+    {
+      "name": "Health Insurance",
+      "type": "capped",
+      "rate": 0.08625,
+      "cap": 66150
+    },
+    {
+      "name": "Long-Term Care Insurance",
+      "type": "capped",
+      "rate": 0.017,
+      "cap": 66150
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "country": "AU",
+  "currency": "AUD",
+  "brackets": [
+    {
+      "min": 0,
+      "max": 18200,
+      "rate": 0
+    },
+    {
+      "min": 18201,
+      "max": 45000,
+      "rate": 0.16
+    },
+    {
+      "min": 45001,
+      "max": 135000,
+      "rate": 0.30
+    },
+    {
+      "min": 135001,
+      "max": 190000,
+      "rate": 0.37
+    },
+    {
+      "min": 190001,
+      "max": null,
+      "rate": 0.45
+    }
+  ],
+  "extraTaxes": [
+    {
+      "name": "Medicare Levy",
+      "type": "flat",
+      "rate": 0.02
+    }
+  ]
+}

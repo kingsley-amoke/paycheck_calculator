@@ -1,0 +1,60 @@
+name: paycheck_calculator
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  provider:
+  intl:
+  in_app_purchase:
+  purchases_flutter:
+  purchases_ui_flutter:
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons:
+  flutter_native_splash:
+  change_app_package_name:
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+#  adaptive_icon_background: "#1976D2"
+#  adaptive_icon_foreground: "assets/images/adaptive_icon.png"
+
+flutter_native_splash:
+  color: "#fafafa"
+  image: assets/images/icon.png
+  android_12:
+    color: "#fafafa"
+    image: assets/images/icon.png
+    icon_background_color: "#fafafa"
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/taxes/us.json
+    - assets/taxes/ca.json
+    - assets/taxes/uk.json
+    - assets/taxes/au.json
+    - assets/taxes/de.json
+    - assets/images/icon.png
+    - assets/images/
+

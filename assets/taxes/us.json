@@ -1,0 +1,2283 @@
+{
+  "country": "US",
+  "currency": "USD",
+  "filingStatuses": {
+    "single": {
+      "standardDeduction": 16100,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 11925,
+          "rate": 0.10
+        },
+        {
+          "min": 11926,
+          "max": 48475,
+          "rate": 0.12
+        },
+        {
+          "min": 48476,
+          "max": 103350,
+          "rate": 0.22
+        },
+        {
+          "min": 103351,
+          "max": 197300,
+          "rate": 0.24
+        },
+        {
+          "min": 197301,
+          "max": 250525,
+          "rate": 0.32
+        },
+        {
+          "min": 250526,
+          "max": 626350,
+          "rate": 0.35
+        },
+        {
+          "min": 626351,
+          "max": null,
+          "rate": 0.37
+        }
+      ]
+    },
+    "married_jointly": {
+      "standardDeduction": 32200,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 23850,
+          "rate": 0.10
+        },
+        {
+          "min": 23851,
+          "max": 96950,
+          "rate": 0.12
+        },
+        {
+          "min": 96951,
+          "max": 206700,
+          "rate": 0.22
+        },
+        {
+          "min": 206701,
+          "max": 394600,
+          "rate": 0.24
+        },
+        {
+          "min": 394601,
+          "max": 501050,
+          "rate": 0.32
+        },
+        {
+          "min": 501051,
+          "max": 751600,
+          "rate": 0.35
+        },
+        {
+          "min": 751601,
+          "max": null,
+          "rate": 0.37
+        }
+      ]
+    },
+    "married_separately": {
+      "standardDeduction": 16100,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 11925,
+          "rate": 0.10
+        },
+        {
+          "min": 11926,
+          "max": 48475,
+          "rate": 0.12
+        },
+        {
+          "min": 48476,
+          "max": 103350,
+          "rate": 0.22
+        },
+        {
+          "min": 103351,
+          "max": 197300,
+          "rate": 0.24
+        },
+        {
+          "min": 197301,
+          "max": 250525,
+          "rate": 0.32
+        },
+        {
+          "min": 250526,
+          "max": 375800,
+          "rate": 0.35
+        },
+        {
+          "min": 375801,
+          "max": null,
+          "rate": 0.37
+        }
+      ]
+    },
+    "head_of_household": {
+      "standardDeduction": 24150,
+      "brackets": [
+        {
+          "min": 0,
+          "max": 17000,
+          "rate": 0.10
+        },
+        {
+          "min": 17001,
+          "max": 64850,
+          "rate": 0.12
+        },
+        {
+          "min": 64851,
+          "max": 103350,
+          "rate": 0.22
+        },
+        {
+          "min": 103351,
+          "max": 197300,
+          "rate": 0.24
+        },
+        {
+          "min": 197301,
+          "max": 250500,
+          "rate": 0.32
+        },
+        {
+          "min": 250501,
+          "max": 626350,
+          "rate": 0.35
+        },
+        {
+          "min": 626351,
+          "max": null,
+          "rate": 0.37
+        }
+      ]
+    }
+  },
+  "regions": {
+    "type": "state",
+    "items": [
+      {
+        "name": "Alabama",
+        "code": "AL",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 3000,
+          "married_jointly": 8500
+        },
+        "personalExemption": {
+          "single": 1500,
+          "married_jointly": 3000,
+          "dependent": 1000
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 500,
+                "rate": 0.02
+              },
+              {
+                "min": 501,
+                "max": 3000,
+                "rate": 0.04
+              },
+              {
+                "min": 3001,
+                "max": null,
+                "rate": 0.05
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 1000,
+                "rate": 0.02
+              },
+              {
+                "min": 1001,
+                "max": 6000,
+                "rate": 0.04
+              },
+              {
+                "min": 6001,
+                "max": null,
+                "rate": 0.05
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Alaska",
+        "code": "AK",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "Arizona",
+        "code": "AZ",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 8350,
+          "married_jointly": 16700
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 100
+        },
+        "rate": 0.025
+      },
+      {
+        "name": "Arkansas",
+        "code": "AR",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 2470,
+          "married_jointly": 4940
+        },
+        "personalExemption": {
+          "single": 29,
+          "married_jointly": 58,
+          "dependent": 29
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 4600,
+                "rate": 0.02
+              },
+              {
+                "min": 4601,
+                "max": null,
+                "rate": 0.039
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 4600,
+                "rate": 0.02
+              },
+              {
+                "min": 4601,
+                "max": null,
+                "rate": 0.039
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "California",
+        "code": "CA",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 5540,
+          "married_jointly": 11080
+        },
+        "personalExemption": {
+          "single": 153,
+          "married_jointly": 306,
+          "dependent": 153
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 11079,
+                "rate": 0.01
+              },
+              {
+                "min": 11080,
+                "max": 26264,
+                "rate": 0.02
+              },
+              {
+                "min": 26265,
+                "max": 41452,
+                "rate": 0.04
+              },
+              {
+                "min": 41453,
+                "max": 57542,
+                "rate": 0.06
+              },
+              {
+                "min": 57543,
+                "max": 72724,
+                "rate": 0.08
+              },
+              {
+                "min": 72725,
+                "max": 371479,
+                "rate": 0.093
+              },
+              {
+                "min": 371480,
+                "max": 445771,
+                "rate": 0.103
+              },
+              {
+                "min": 445772,
+                "max": 742953,
+                "rate": 0.113
+              },
+              {
+                "min": 742952,
+                "max": 1000000,
+                "rate": 0.123
+              },
+              {
+                "min": 1000001,
+                "max": null,
+                "rate": 0.133
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 22158,
+                "rate": 0.01
+              },
+              {
+                "min": 22149,
+                "max": 52528,
+                "rate": 0.02
+              },
+              {
+                "min": 52529,
+                "max": 82904,
+                "rate": 0.04
+              },
+              {
+                "min": 82905,
+                "max": 115084,
+                "rate": 0.06
+              },
+              {
+                "min": 115085,
+                "max": 145448,
+                "rate": 0.08
+              },
+              {
+                "min": 145449,
+                "max": 742958,
+                "rate": 0.093
+              },
+              {
+                "min": 742959,
+                "max": 891542,
+                "rate": 0.103
+              },
+              {
+                "min": 891543,
+                "max": 1000000,
+                "rate": 0.113
+              },
+              {
+                "min": 1000001,
+                "max": 1485906,
+                "rate": 0.123
+              },
+              {
+                "min": 1485907,
+                "max": null,
+                "rate": 0.133
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Colorado",
+        "code": "CO",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "rate": 0.044
+      },
+      {
+        "name": "Connecticut",
+        "code": "CT",
+        "type": "progressive",
+        "personalExemption": {
+          "single": 15000,
+          "married_jointly": 24000,
+          "dependent": 0
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 10000,
+                "rate": 0.02
+              },
+              {
+                "min": 10001,
+                "max": 50000,
+                "rate": 0.045
+              },
+              {
+                "min": 50001,
+                "max": 100000,
+                "rate": 0.055
+              },
+              {
+                "min": 100001,
+                "max": 200000,
+                "rate": 0.06
+              },
+              {
+                "min": 200001,
+                "max": 250000,
+                "rate": 0.065
+              },
+              {
+                "min": 250001,
+                "max": 500000,
+                "rate": 0.069
+              },
+              {
+                "min": 500001,
+                "max": null,
+                "rate": 0.0699
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 20000,
+                "max": 100000,
+                "rate": 0.045
+              },
+              {
+                "min": 100001,
+                "max": 200000,
+                "rate": 0.055
+              },
+              {
+                "min": 200001,
+                "max": 400000,
+                "rate": 0.06
+              },
+              {
+                "min": 400001,
+                "max": 500000,
+                "rate": 0.065
+              },
+              {
+                "min": 500001,
+                "max": 1000000,
+                "rate": 0.069
+              },
+              {
+                "min": 1000001,
+                "max": null,
+                "rate": 0.0699
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Delaware",
+        "code": "DE",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 3250,
+          "married_jointly": 6500
+        },
+        "personalExemption": {
+          "single": 110,
+          "married_jointly": 220,
+          "dependent": 110
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 2000,
+                "max": 5000,
+                "rate": 0.022
+              },
+              {
+                "min": 5001,
+                "max": 10000,
+                "rate": 0.039
+              },
+              {
+                "min": 10001,
+                "max": 20000,
+                "rate": 0.048
+              },
+              {
+                "min": 20001,
+                "max": 25000,
+                "rate": 0.052
+              },
+              {
+                "min": 25001,
+                "max": 60000,
+                "rate": 0.055
+              },
+              {
+                "min": 60001,
+                "max": null,
+                "rate": 0.066
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 2001,
+                "max": 5000,
+                "rate": 0.022
+              },
+              {
+                "min": 5001,
+                "max": 10000,
+                "rate": 0.039
+              },
+              {
+                "min": 10001,
+                "max": 20000,
+                "rate": 0.048
+              },
+              {
+                "min": 20001,
+                "max": 25000,
+                "rate": 0.052
+              },
+              {
+                "min": 25001,
+                "max": 60000,
+                "rate": 0.055
+              },
+              {
+                "min": 60001,
+                "max": null,
+                "rate": 0.066
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Florida",
+        "code": "FL",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "Georgia",
+        "code": "GA",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 12000,
+          "married_jointly": 24000
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 4000
+        },
+        "rate": 0.0519
+      },
+      {
+        "name": "Hawaii",
+        "code": "HI",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 4400,
+          "married_jointly": 8800
+        },
+        "personalExemption": {
+          "single": 1144,
+          "married_jointly": 2288,
+          "dependent": 1144
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 9600,
+                "rate": 0.014
+              },
+              {
+                "min": 9601,
+                "max": 14400,
+                "rate": 0.032
+              },
+              {
+                "min": 14401,
+                "max": 19200,
+                "rate": 0.055
+              },
+              {
+                "min": 19201,
+                "max": 24000,
+                "rate": 0.064
+              },
+              {
+                "min": 24001,
+                "max": 36000,
+                "rate": 0.068
+              },
+              {
+                "min": 36001,
+                "max": 48000,
+                "rate": 0.072
+              },
+              {
+                "min": 48001,
+                "max": 125000,
+                "rate": 0.076
+              },
+              {
+                "min": 125001,
+                "max": 175000,
+                "rate": 0.079
+              },
+              {
+                "min": 175001,
+                "max": 225000,
+                "rate": 0.0825
+              },
+              {
+                "min": 225001,
+                "max": 275000,
+                "rate": 0.09
+              },
+              {
+                "min": 275001,
+                "max": 325000,
+                "rate": 0.1
+              },
+              {
+                "min": 325001,
+                "max": null,
+                "rate": 0.11
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 19200,
+                "rate": 0.014
+              },
+              {
+                "min": 19201,
+                "max": 28800,
+                "rate": 0.032
+              },
+              {
+                "min": 28801,
+                "max": 36400,
+                "rate": 0.055
+              },
+              {
+                "min": 36401,
+                "max": 48000,
+                "rate": 0.064
+              },
+              {
+                "min": 48001,
+                "max": 72000,
+                "rate": 0.068
+              },
+              {
+                "min": 72001,
+                "max": 96000,
+                "rate": 0.072
+              },
+              {
+                "min": 96001,
+                "max": 250000,
+                "rate": 0.076
+              },
+              {
+                "min": 250001,
+                "max": 350000,
+                "rate": 0.079
+              },
+              {
+                "min": 350001,
+                "max": 450000,
+                "rate": 0.0825
+              },
+              {
+                "min": 450001,
+                "max": 550000,
+                "rate": 0.09
+              },
+              {
+                "min": 550001,
+                "max": 650000,
+                "rate": 0.1
+              },
+              {
+                "min": 650001,
+                "max": null,
+                "rate": 0.11
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Idaho",
+        "code": "ID",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "type": "progressive",
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 4811,
+                "max": null,
+                "rate": 0.053
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 9622,
+                "max": null,
+                "rate": 0.053
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Illinois",
+        "code": "IL",
+        "type": "flat",
+        "personalExemption": {
+          "single": 2925,
+          "married_jointly": 5850,
+          "dependent": 2925
+        },
+        "rate": 0.0495
+      },
+      {
+        "name": "Indiana",
+        "code": "IN",
+        "type": "flat",
+        "personalExemption": {
+          "single": 1000,
+          "married_jointly": 2000,
+          "dependent": 1000
+        },
+        "rate": 0.0295
+      },
+      {
+        "name": "Iowa",
+        "code": "IA",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "personalExemption": {
+          "single": 40,
+          "married_jointly": 80,
+          "dependent": 40
+        },
+        "rate": 0.0380
+      },
+      {
+        "name": "Kansas",
+        "code": "KS",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 3605,
+          "married_jointly": 8240
+        },
+        "personalExemption": {
+          "single": 9160,
+          "married_jointly": 18320,
+          "dependent": 2320
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 23000,
+                "rate": 0.052
+              },
+              {
+                "min": 23001,
+                "max": null,
+                "rate": 0.0558
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 46000,
+                "rate": 0.052
+              },
+              {
+                "min": 46001,
+                "max": null,
+                "rate": 0.0558
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Kentucky",
+        "code": "KY",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 3360,
+          "married_jointly": 3360
+        },
+        "rate": 0.035
+      },
+      {
+        "name": "Louisiana",
+        "code": "LA",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 12875,
+          "married_jointly": 12875
+        },
+        "rate": 0.03
+      },
+      {
+        "name": "Maine",
+        "code": "ME",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 8350,
+          "married_jointly": 16700
+        },
+        "personalExemption": {
+          "single": 5300,
+          "married_jointly": 10600,
+          "dependent": 305
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 27399,
+                "rate": 0.052
+              },
+              {
+                "min": 27400,
+                "max": 64849,
+                "rate": 0.0558
+              },
+              {
+                "min": 64850,
+                "max": null,
+                "rate": 0.0558
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 54849,
+                "rate": 0.052
+              },
+              {
+                "min": 54850,
+                "max": 129749,
+                "rate": 0.0558
+              },
+              {
+                "min": 129750,
+                "max": null,
+                "rate": 0.0558
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Maryland",
+        "code": "MD",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 3350,
+          "married_jointly": 6700
+        },
+        "personalExemption": {
+          "single": 3200,
+          "married_jointly": 6400,
+          "dependent": 3200
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 1000,
+                "rate": 0.02
+              },
+              {
+                "min": 1001,
+                "max": 2000,
+                "rate": 0.03
+              },
+              {
+                "min": 2001,
+                "max": 3000,
+                "rate": 0.04
+              },
+              {
+                "min": 3001,
+                "max": 100000,
+                "rate": 0.0475
+              },
+              {
+                "min": 100001,
+                "max": 125000,
+                "rate": 0.05
+              },
+              {
+                "min": 125001,
+                "max": 150000,
+                "rate": 0.0525
+              },
+              {
+                "min": 150001,
+                "max": 250000,
+                "rate": 0.055
+              },
+              {
+                "min": 250001,
+                "max": 500000,
+                "rate": 0.0575
+              },
+              {
+                "min": 500001,
+                "max": 1000000,
+                "rate": 0.0625
+              },
+              {
+                "min": 1000001,
+                "max": null,
+                "rate": 0.065
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 1000,
+                "rate": 0.02
+              },
+              {
+                "min": 1001,
+                "max": 2000,
+                "rate": 0.03
+              },
+              {
+                "min": 2001,
+                "max": 3000,
+                "rate": 0.04
+              },
+              {
+                "min": 3001,
+                "max": 150000,
+                "rate": 0.0475
+              },
+              {
+                "min": 150001,
+                "max": 175000,
+                "rate": 0.05
+              },
+              {
+                "min": 175001,
+                "max": 225000,
+                "rate": 0.0525
+              },
+              {
+                "min": 225001,
+                "max": 300000,
+                "rate": 0.055
+              },
+              {
+                "min": 300001,
+                "max": 600000,
+                "rate": 0.0575
+              },
+              {
+                "min": 600001,
+                "max": 1200000,
+                "rate": 0.0625
+              },
+              {
+                "min": 1200001,
+                "max": null,
+                "rate": 0.065
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Massachusetts",
+        "code": "MA",
+        "type": "progressive",
+        "personalExemption": {
+          "single": 4400,
+          "married_jointly": 8800,
+          "dependent": 4400
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 1083150,
+                "rate": 0.05
+              },
+              {
+                "min": 1083151,
+                "max": null,
+                "rate": 0.09
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 1083150,
+                "rate": 0.05
+              },
+              {
+                "min": 1083151,
+                "max": null,
+                "rate": 0.09
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Michigan",
+        "code": "MI",
+        "type": "flat",
+        "personalExemption": {
+          "single": 5900,
+          "married_jointly": 11800,
+          "dependent": 5900
+        },
+        "rate": 0.425
+      },
+      {
+        "name": "Minnesota",
+        "code": "MN",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 15300,
+          "married_jointly": 30600
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 5300
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 33310,
+                "rate": 0.0535
+              },
+              {
+                "min": 33311,
+                "max": 109430,
+                "rate": 0.068
+              },
+              {
+                "min": 109431,
+                "max": 203150,
+                "rate": 0.0785
+              },
+              {
+                "min": 203151,
+                "max": null,
+                "rate": 0.0985
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 48700,
+                "rate": 0.0535
+              },
+              {
+                "min": 48701,
+                "max": 193480,
+                "rate": 0.068
+              },
+              {
+                "min": 193481,
+                "max": 337930,
+                "rate": 0.0785
+              },
+              {
+                "min": 337931,
+                "max": null,
+                "rate": 0.0985
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Mississippi",
+        "code": "MS",
+        "type": "progressive",
+        "personalExemption": {
+          "single": 6000,
+          "married_jointly": 12000,
+          "dependent": 1500
+        },
+        "standardDeduction": {
+          "single": 2300,
+          "married_jointly": 4600
+        },
+        "brackets": [
+          {
+            "min": 10000,
+            "max": null,
+            "rate": 0.04
+          }
+        ]
+      },
+      {
+        "name": "Missouri",
+        "code": "MO",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 1349,
+                "max": 2696,
+                "rate": 0.02
+              },
+              {
+                "min": 2697,
+                "max": 4044,
+                "rate": 0.025
+              },
+              {
+                "min": 4045,
+                "max": 5392,
+                "rate": 0.03
+              },
+              {
+                "min": 5393,
+                "max": 6740,
+                "rate": 0.035
+              },
+              {
+                "min": 6741,
+                "max": 8088,
+                "rate": 0.04
+              },
+              {
+                "min": 8089,
+                "max": 9436,
+                "rate": 0.045
+              },
+              {
+                "min": 9437,
+                "max": null,
+                "rate": 0.047
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 1349,
+                "max": 2696,
+                "rate": 0.02
+              },
+              {
+                "min": 2697,
+                "max": 4044,
+                "rate": 0.025
+              },
+              {
+                "min": 4045,
+                "max": 5392,
+                "rate": 0.03
+              },
+              {
+                "min": 5393,
+                "max": 6740,
+                "rate": 0.035
+              },
+              {
+                "min": 6741,
+                "max": 8088,
+                "rate": 0.04
+              },
+              {
+                "min": 8089,
+                "max": 9436,
+                "rate": 0.045
+              },
+              {
+                "min": 9437,
+                "max": null,
+                "rate": 0.047
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Montana",
+        "code": "MT",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 47500,
+                "rate": 0.047
+              },
+              {
+                "min": 47501,
+                "max": null,
+                "rate": 0.0565
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 95000,
+                "rate": 0.047
+              },
+              {
+                "min": 95001,
+                "max": null,
+                "rate": 0.0565
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Nebraska",
+        "code": "NE",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 8850,
+          "married_jointly": 17700
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 4130,
+                "rate": 0.0246
+              },
+              {
+                "min": 4131,
+                "max": 24760,
+                "rate": 0.0351
+              },
+              {
+                "min": 24761,
+                "max": null,
+                "rate": 0.0455
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 8250,
+                "rate": 0.0246
+              },
+              {
+                "min": 8251,
+                "max": 49530,
+                "rate": 0.0351
+              },
+              {
+                "min": 49531,
+                "max": null,
+                "rate": 0.0455
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Nevada",
+        "code": "NV",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "New Hampshire",
+        "code": "NH",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "New Jersey",
+        "code": "NJ",
+        "type": "progressive",
+        "personalExemption": {
+          "single": 1000,
+          "married_jointly": 2000,
+          "dependent": 1500
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 20000,
+                "rate": 0.014
+              },
+              {
+                "min": 20001,
+                "max": 35000,
+                "rate": 0.0175
+              },
+              {
+                "min": 35001,
+                "max": 40000,
+                "rate": 0.035
+              },
+              {
+                "min": 40001,
+                "max": 75000,
+                "rate": 0.0553
+              },
+              {
+                "min": 75001,
+                "max": 500000,
+                "rate": 0.0637
+              },
+              {
+                "min": 500001,
+                "max": 1000000,
+                "rate": 0.0897
+              },
+              {
+                "min": 1000001,
+                "max": null,
+                "rate": 0.1075
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 20000,
+                "rate": 0.014
+              },
+              {
+                "min": 20001,
+                "max": 50000,
+                "rate": 0.0175
+              },
+              {
+                "min": 50001,
+                "max": 70000,
+                "rate": 0.0245
+              },
+              {
+                "min": 70001,
+                "max": 80000,
+                "rate": 0.035
+              },
+              {
+                "min": 80001,
+                "max": 150000,
+                "rate": 0.0553
+              },
+              {
+                "min": 150001,
+                "max": 500000,
+                "rate": 0.0637
+              },
+              {
+                "min": 500001,
+                "max": 1000000,
+                "rate": 0.0897
+              },
+              {
+                "min": 1000001,
+                "max": null,
+                "rate": 0.1075
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "New Mexico",
+        "code": "NM",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 4000
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 5500,
+                "rate": 0.015
+              },
+              {
+                "min": 5501,
+                "max": 16500,
+                "rate": 0.032
+              },
+              {
+                "min": 16501,
+                "max": 33500,
+                "rate": 0.043
+              },
+              {
+                "min": 33501,
+                "max": 66500,
+                "rate": 0.047
+              },
+              {
+                "min": 66501,
+                "max": 210000,
+                "rate": 0.049
+              },
+              {
+                "min": 210001,
+                "max": null,
+                "rate": 0.059
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 8000,
+                "rate": 0.015
+              },
+              {
+                "min": 8001,
+                "max": 25000,
+                "rate": 0.032
+              },
+              {
+                "min": 20001,
+                "max": 50000,
+                "rate": 0.043
+              },
+              {
+                "min": 50001,
+                "max": 100000,
+                "rate": 0.047
+              },
+              {
+                "min": 100001,
+                "max": 315000,
+                "rate": 0.049
+              },
+              {
+                "min": 315001,
+                "max": null,
+                "rate": 0.059
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "New York",
+        "code": "NY",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 8000,
+          "married_jointly": 16050
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 1000
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 8500,
+                "rate": 0.039
+              },
+              {
+                "min": 8501,
+                "max": 11700,
+                "rate": 0.044
+              },
+              {
+                "min": 11701,
+                "max": 13900,
+                "rate": 0.0515
+              },
+              {
+                "min": 13901,
+                "max": 80650,
+                "rate": 0.054
+              },
+              {
+                "min": 80651,
+                "max": 215400,
+                "rate": 0.059
+              },
+              {
+                "min": 215401,
+                "max": 1077550,
+                "rate": 0.0685
+              },
+              {
+                "min": 1077551,
+                "max": 5000000,
+                "rate": 0.0965
+              },
+              {
+                "min": 5000001,
+                "max": 25000000,
+                "rate": 0.103
+              },
+              {
+                "min": 25000001,
+                "max": null,
+                "rate": 0.109
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 17150,
+                "rate": 0.039
+              },
+              {
+                "min": 17151,
+                "max": 23600,
+                "rate": 0.044
+              },
+              {
+                "min": 23601,
+                "max": 27900,
+                "rate": 0.0515
+              },
+              {
+                "min": 27901,
+                "max": 161550,
+                "rate": 0.054
+              },
+              {
+                "min": 161551,
+                "max": 323200,
+                "rate": 0.059
+              },
+              {
+                "min": 323201,
+                "max": 2155350,
+                "rate": 0.0685
+              },
+              {
+                "min": 2155351,
+                "max": 5000000,
+                "rate": 0.0965
+              },
+              {
+                "min": 5000001,
+                "max": 25000000,
+                "rate": 0.103
+              },
+              {
+                "min": 25000001,
+                "max": null,
+                "rate": 0.109
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "North Carolina",
+        "code": "NC",
+        "type": "flat",
+        "standardDeduction": {
+          "single": 12750,
+          "married_jointly": 25500
+        },
+        "rate": 0.0399
+      },
+      {
+        "name": "North Dakota",
+        "code": "ND",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 16100,
+          "married_jointly": 32200
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 48475,
+                "max": 244825,
+                "rate": 0.0195
+              },
+              {
+                "min": 244826,
+                "max": null,
+                "rate": 0.025
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 80975,
+                "max": 278075,
+                "rate": 0.0195
+              },
+              {
+                "min": 298076,
+                "max": null,
+                "rate": 0.025
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Ohio",
+        "code": "OH",
+        "type": "flat",
+        "personalExemption": {
+          "single": 2400,
+          "married_jointly": 4800,
+          "dependent": 2400
+        },
+        "rate": 0.0275
+      },
+      {
+        "name": "Oklahoma",
+        "code": "OK",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 6350,
+          "married_jointly": 12700
+        },
+        "personalExemption": {
+          "single": 1000,
+          "married_jointly": 2000,
+          "dependent": 1000
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 3751,
+                "max": 4900,
+                "rate": 0.025
+              },
+              {
+                "min": 4901,
+                "max": 7200,
+                "rate": 0.035
+              },
+              {
+                "min": 7201,
+                "max": null,
+                "rate": 0.045
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 7500,
+                "max": 9800,
+                "rate": 0.025
+              },
+              {
+                "min": 9801,
+                "max": 14400,
+                "rate": 0.035
+              },
+              {
+                "min": 14401,
+                "max": null,
+                "rate": 0.045
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Oregon",
+        "code": "OR",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 2910,
+          "married_jointly": 5820
+        },
+        "personalExemption": {
+          "single": 256,
+          "married_jointly": 512,
+          "dependent": 256
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 4550,
+                "rate": 0.0475
+              },
+              {
+                "min": 4551,
+                "max": 11400,
+                "rate": 0.0675
+              },
+              {
+                "min": 11401,
+                "max": 125000,
+                "rate": 0.0875
+              },
+              {
+                "min": 125001,
+                "max": null,
+                "rate": 0.099
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 9100,
+                "rate": 0.0475
+              },
+              {
+                "min": 9101,
+                "max": 22800,
+                "rate": 0.0675
+              },
+              {
+                "min": 22801,
+                "max": 250000,
+                "rate": 0.0875
+              },
+              {
+                "min": 250001,
+                "max": null,
+                "rate": 0.099
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Pennsylvania",
+        "code": "PA",
+        "type": "flat",
+        "rate": 0.0307
+      },
+      {
+        "name": "Rhode Island",
+        "code": "RI",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 11200,
+          "married_jointly": 22400
+        },
+        "personalExemption": {
+          "single": 5250,
+          "married_jointly": 10500,
+          "dependent": 5250
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 82050,
+                "rate": 0.0375
+              },
+              {
+                "min": 82051,
+                "max": 186450,
+                "rate": 0.0475
+              },
+              {
+                "min": 186451,
+                "max": null,
+                "rate": 0.0599
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 82050,
+                "rate": 0.0375
+              },
+              {
+                "min": 82051,
+                "max": 186450,
+                "rate": 0.0475
+              },
+              {
+                "min": 186451,
+                "max": null,
+                "rate": 0.0599
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "South Carolina",
+        "code": "SC",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 8350,
+          "married_jointly": 16700
+        },
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 4930
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 3640,
+                "max": 18230,
+                "rate": 0.03
+              },
+              {
+                "min": 18231,
+                "max": null,
+                "rate": 0.06
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 3640,
+                "max": 18230,
+                "rate": 0.03
+              },
+              {
+                "min": 18231,
+                "max": null,
+                "rate": 0.06
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "South Dakota",
+        "code": "SD",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "Tennessee",
+        "code": "TN",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "Texas",
+        "code": "TX",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "Utah",
+        "code": "UT",
+        "type": "flat",
+        "personalExemption": {
+          "single": 0,
+          "married_jointly": 0,
+          "dependent": 2111
+        },
+        "standardDeduction": {
+          "single": 966,
+          "married_jointly": 1932
+        },
+        "rate": 0.045
+      },
+      {
+        "name": "Vermont",
+        "code": "VT",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 7650,
+          "married_jointly": 15300
+        },
+        "personalExemption": {
+          "single": 5300,
+          "married_jointly": 10600,
+          "dependent": 5300
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 49400,
+                "rate": 0.0335
+              },
+              {
+                "min": 49401,
+                "max": 119700,
+                "rate": 0.066
+              },
+              {
+                "min": 119701,
+                "max": 249700,
+                "rate": 0.076
+              },
+              {
+                "min": 249701,
+                "max": null,
+                "rate": 0.0875
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 82500,
+                "rate": 0.0335
+              },
+              {
+                "min": 82501,
+                "max": 199450,
+                "rate": 0.066
+              },
+              {
+                "min": 199451,
+                "max": 304000,
+                "rate": 0.076
+              },
+              {
+                "min": 304001,
+                "max": null,
+                "rate": 0.0875
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Virginia",
+        "code": "VA",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 8750,
+          "married_jointly": 17500
+        },
+        "personalExemption": {
+          "single": 930,
+          "married_jointly": 1860,
+          "dependent": 930
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 3000,
+                "rate": 0.02
+              },
+              {
+                "min": 3001,
+                "max": 5000,
+                "rate": 0.03
+              },
+              {
+                "min": 5001,
+                "max": 17000,
+                "rate": 0.05
+              },
+              {
+                "min": 17001,
+                "max": null,
+                "rate": 0.0575
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 3000,
+                "rate": 0.02
+              },
+              {
+                "min": 3001,
+                "max": 5000,
+                "rate": 0.03
+              },
+              {
+                "min": 5001,
+                "max": 17000,
+                "rate": 0.05
+              },
+              {
+                "min": 17001,
+                "max": null,
+                "rate": 0.0575
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Washington",
+        "code": "WA",
+        "type": "flat",
+        "rate": 0.0
+      },
+      {
+        "name": "West Virginia",
+        "code": "WV",
+        "type": "progressive",
+        "personalExemption": {
+          "single": 2000,
+          "married_jointly": 4000,
+          "dependent": 2000
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 10000,
+                "rate": 0.0222
+              },
+              {
+                "min": 10001,
+                "max": 25000,
+                "rate": 0.0296
+              },
+              {
+                "min": 25001,
+                "max": 40000,
+                "rate": 0.0333
+              },
+              {
+                "min": 40001,
+                "max": 60000,
+                "rate": 0.0444
+              },
+              {
+                "min": 60001,
+                "max": null,
+                "rate": 0.0482
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 10000,
+                "rate": 0.0222
+              },
+              {
+                "min": 10001,
+                "max": 25000,
+                "rate": 0.0296
+              },
+              {
+                "min": 25001,
+                "max": 40000,
+                "rate": 0.0333
+              },
+              {
+                "min": 40001,
+                "max": 60000,
+                "rate": 0.0444
+              },
+              {
+                "min": 60001,
+                "max": null,
+                "rate": 0.0482
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Wisconsin",
+        "code": "WI",
+        "type": "progressive",
+        "standardDeduction": {
+          "single": 13960,
+          "married_jointly": 25840
+        },
+        "personalExemption": {
+          "single": 700,
+          "married_jointly": 1400,
+          "dependent": 700
+        },
+        "filingStatuses": {
+          "single": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 15110,
+                "rate": 0.035
+              },
+              {
+                "min": 15111,
+                "max": 51950,
+                "rate": 0.044
+              },
+              {
+                "min": 51951,
+                "max": 332720,
+                "rate": 0.053
+              },
+              {
+                "min": 332721,
+                "max": null,
+                "rate": 0.0765
+              }
+            ]
+          },
+          "married_jointly": {
+            "brackets": [
+              {
+                "min": 0,
+                "max": 20150,
+                "rate": 0.035
+              },
+              {
+                "min": 20151,
+                "max": 69260,
+                "rate": 0.044
+              },
+              {
+                "min": 69261,
+                "max": 443630,
+                "rate": 0.053
+              },
+              {
+                "min": 443631,
+                "max": null,
+                "rate": 0.0765
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Wyoming",
+        "code": "WY",
+        "type": "flat",
+        "rate": 0.0
+      }
+    ]
+  },
+  "extraTaxes": [
+    {
+      "name": "Social Security",
+      "rate": 0.062
+    },
+    {
+      "name": "Medicare",
+      "rate": 0.0145
+    }
+  ]
+}

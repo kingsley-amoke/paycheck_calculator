@@ -1,0 +1,103 @@
+{
+  "country": "UK",
+  "currency": "GBP",
+  "personalAllowance": {
+    "amount": 12570,
+    "phaseOut": {
+      "start": 100000,
+      "end": 125140
+    }
+  },
+  "brackets": [
+    {
+      "min": 0,
+      "max": 37700,
+      "rate": 0.20
+    },
+    {
+      "min": 37701,
+      "max": 125140,
+      "rate": 0.40
+    },
+    {
+      "min": 125141,
+      "max": null,
+      "rate": 0.45
+    }
+  ],
+  "regions": {
+    "type": "country_part",
+    "items": [
+      {
+        "name": "England",
+        "code": "ENG",
+        "type": "default"
+      },
+      {
+        "name": "Wales",
+        "code": "WLS",
+        "type": "default"
+      },
+      {
+        "name": "Northern Ireland",
+        "code": "NIR",
+        "type": "default"
+      },
+      {
+        "name": "Scotland",
+        "code": "SCT",
+        "type": "progressive",
+        "brackets": [
+          {
+            "min": 0,
+            "max": 2162,
+            "rate": 0.19
+          },
+          {
+            "min": 2163,
+            "max": 13118,
+            "rate": 0.20
+          },
+          {
+            "min": 13119,
+            "max": 31092,
+            "rate": 0.21
+          },
+          {
+            "min": 31093,
+            "max": 125140,
+            "rate": 0.42
+          },
+          {
+            "min": 125141,
+            "max": null,
+            "rate": 0.47
+          }
+        ]
+      }
+    ]
+  },
+  "extraTaxes": [
+    {
+      "name": "National Insurance",
+      "type": "progressive",
+      "brackets": [
+        {
+          "min": 0,
+          "max": 12570,
+          "rate": 0.0
+        },
+        {
+          "min": 12571,
+          "max": 50270,
+          "rate": 0.12
+        },
+        {
+          "min": 50271,
+          "max": null,
+          "rate": 0.02
+        }
+      ]
+    }
+  ]
+}
