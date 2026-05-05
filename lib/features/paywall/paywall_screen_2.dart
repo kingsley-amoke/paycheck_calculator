@@ -344,7 +344,7 @@ class _PurchaseViewState extends State<PurchaseView>
   Widget _buildHero() {
     return AnimatedBuilder(
       animation: Listenable.merge([_shakeController, _zoomController]),
-      builder: (_, __) => Transform.rotate(
+      builder: (_, _) => Transform.rotate(
         angle: _shakeAngle.value * pi / 180,
         child: Transform.scale(
           scale: _zoomAnim.value,

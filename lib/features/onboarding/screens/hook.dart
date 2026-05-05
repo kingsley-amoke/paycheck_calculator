@@ -4,7 +4,6 @@ import 'package:paycheck_calculator/features/onboarding/widgets/cta_button.dart'
 import 'package:paycheck_calculator/features/onboarding/widgets/fade_up_animation.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/hook_illustration.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/title_text.dart';
-import 'package:paycheck_calculator/features/paywall/paywall_screen_2.dart';
 
 import '../widgets/glow_orb.dart';
 import '../widgets/page_indicator.dart';

@@ -8,7 +8,6 @@ import 'package:paycheck_calculator/features/paywall/paywall_screen_2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../paywall/paywall_screen.dart';
 import '../../provider/calculator_provider.dart';
 import '../widgets/filing_status_selector.dart';
 import '../widgets/region_dropdown.dart';
