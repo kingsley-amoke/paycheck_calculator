@@ -45,9 +45,4 @@ app.*.map.json
 /android/app/release
 
 
-/android
-/build
-/macos
-/web
-/windows
-/ios
+/android/key.properties
