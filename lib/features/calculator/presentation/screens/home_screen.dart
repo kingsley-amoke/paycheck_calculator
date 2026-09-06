@@ -56,31 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         const Text(
-          'Paycheck',
+          'Paycheck Calculator',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.w700,
             color: AppColors.primary,
-          ),
-        ),
-        const Spacer(),
-        GestureDetector(
-          onTap: () => _showPaywall(context),
-          child: CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.yellow.withValues(alpha: 0.8),
-            child: ClipOval(
-              child: Container(
-                width: 36,
-                height: 36,
-                color: Colors.amberAccent[700],
-                child: const Icon(
-                  Icons.workspace_premium,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ),
           ),
         ),
       ],
@@ -105,18 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           Row(children: [Location(), RegionDropdown()]),
         ],
-      ),
-    );
-  }
-
-  void _showPaywall(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => PurchaseView(
-          onDismiss: () {
-            Navigator.of(context).pop();
-          },
-        ),
       ),
     );
   }

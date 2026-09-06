@@ -8,7 +8,7 @@ import '../../../domain/usecases/tax_calculator_factory.dart';
 import '../../../domain/usecases/tax_data_loader.dart';
 
 class CalculatorProvider extends ChangeNotifier {
-  double income = 0;
+  double income = 75000;
   PayFrequency frequency = PayFrequency.annually;
   Country country = Country.us;
 

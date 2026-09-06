@@ -17,7 +17,6 @@ class _MainShellState extends State<MainShell> {
   final List<Widget> _screens = const [
     HomeScreen(),
     CompareTaxScreen(),
-    // CalculationsScreen(),
     SettingsScreen(),
   ];
 

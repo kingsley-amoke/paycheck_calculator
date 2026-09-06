@@ -26,8 +26,8 @@ class HookIllustration extends StatelessWidget {
           ),
           // Inner ring with shadow
           Container(
-            width: size * 0.75,
-            height: size * 0.75,
+            width: size * 0.5,
+            height: size * 0.5,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.surfaceContainerLowest,

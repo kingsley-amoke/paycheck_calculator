@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/cta_button.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/page_indicator.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/subtitle_text.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/tax_insight_illustration.dart';
+import 'package:paycheck_calculator/features/paywall/purchase_view.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../widgets/fade_up_animation.dart';
@@ -233,10 +233,9 @@ class _TaxInsightsScreenState extends State<TaxInsightsScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: CTAButton(
                       onTap: () {
-                        //TODO: push and repace all
-                        Navigator.of(
-                          context,
-                        ).push(MaterialPageRoute(builder: (_) => MainShell()));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => PurchaseView()),
+                        );
                       },
                       pulseController: _stagger,
                       text: 'Get Started',
