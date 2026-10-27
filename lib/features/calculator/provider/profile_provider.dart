@@ -29,11 +29,6 @@ class ProfileProvider extends ChangeNotifier {
   Box<Map>? _profilesBox;
   Box? _stateBox;
 
-  /// True while saved inputs are being applied to the working calculator —
-  /// suppresses autosave so loading echoes never rewrite the stored snapshot.
-  bool _restoring = false;
-  bool _disposed = false;
-
   CalculationProfile? get activeProfile {
     final id = activeProfileId;
     if (id == null) return null;
@@ -82,12 +77,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> _applyToCalculator(CalculationProfile profile) async {
-    _restoring = true;
-    try {
-      await calculator.applyProfile(profile);
-    } finally {
-      _restoring = false;
-    }
+    await calculator.applyProfile(profile);
   }
 
   Future<String> saveCurrentAs(String name) async {
@@ -243,7 +233,6 @@ class ProfileProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    _disposed = true;
     super.dispose();
   }
 }

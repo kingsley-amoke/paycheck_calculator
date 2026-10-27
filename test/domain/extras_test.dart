@@ -64,12 +64,13 @@ void main() {
     expect(lineSum(plain, 'Income Tax'), greaterThan(lineSum(with401k, 'Income Tax')));
     expect(with401k.extraTaxesTotal, closeTo(plain.extraTaxesTotal, 0.01),
         reason: '401k lowers income-tax wages, not Social Security/Medicare wages');
-    expect(with401k.netIncome, lessThan(plain.netIncome + 5000),
-        reason: 'savings are partial, tax still applies to remaining wages');
     expect(
-      with401k.grossIncome - with401k.totalTax - with401k.postTaxDeductions,
+      with401k.grossIncome - with401k.totalTax - with401k.preTaxDeductions - with401k.postTaxDeductions,
       with401k.netIncome,
+      reason: 'pre-tax contributions leave the paycheck too',
     );
+    expect(with401k.netIncome, lessThan(plain.netIncome),
+        reason: 'contributed amount exceeds the withholding saving');
   });
 
   test('post-tax deduction is subtracted from net only', () {

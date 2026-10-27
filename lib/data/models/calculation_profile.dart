@@ -132,12 +132,6 @@ double _nonNegative(Object? value) {
   return d;
 }
 
-double _positiveDouble(Object? value) {
-  final d = value is num ? value.toDouble() : double.tryParse('$value');
-  if (d == null || d.isNaN || d <= 0) return 0;
-  return d;
-}
-
 double? _positiveOrNull(Object? value) {
   final d = value is num ? value.toDouble() : double.tryParse('$value');
   if (d == null || d.isNaN || d <= 0) return null;

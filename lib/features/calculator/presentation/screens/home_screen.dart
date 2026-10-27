@@ -4,13 +4,19 @@ import 'package:paycheck_calculator/features/calculator/presentation/widgets/cou
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/income_input_card.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/location.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/pay_frequency_selector.dart';
-import 'package:provider/provider.dart';
+
+import '../widgets/filing_status_selector.dart';
+import '../widgets/region_dropdown.dart';
+import '../widgets/save_profile_sheet.dart';
+import '../widgets/overtime_section.dart';
+import '../widgets/extra_income_section.dart';
+import '../widgets/user_deductions_section.dart';
+import '../widgets/takehome_card.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../provider/calculator_provider.dart';
-import '../widgets/filing_status_selector.dart';
-import '../widgets/region_dropdown.dart';
-import '../widgets/takehome_card.dart';
+import '../../provider/profile_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,6 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: FrequencySelector()),
               if (config?.filingStatuses != null)
                 SliverToBoxAdapter(child: FilingStatusSelector()),
+              SliverToBoxAdapter(child: OvertimeSection()),
+              SliverToBoxAdapter(child: ExtraIncomeSection()),
+              SliverToBoxAdapter(child: UserDeductionsSection()),
               SliverToBoxAdapter(child: TakeHomeCard()),
               SliverToBoxAdapter(child: BreakdownSection()),
               // SliverToBoxAdapter(child: _buildRecentScenarios()),
@@ -52,15 +61,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
+    final profiles = context.watch<ProfileProvider>();
     return Row(
       children: [
-        const Text(
-          'Paycheck Calculator',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+        const Expanded(
+          child: Text(
+            'Paycheck Calculator',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
+            ),
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.bookmark_add_outlined),
+          tooltip: 'Save as profile',
+          color: profiles.hasUnsavedChanges ? Colors.amber : null,
+          onPressed: () => showSaveProfileSheet(context),
         ),
       ],
     );
