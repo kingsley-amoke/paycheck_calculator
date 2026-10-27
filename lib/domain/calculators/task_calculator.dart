@@ -3,6 +3,7 @@ import '../../data/models/extra_tax.dart';
 import '../../data/models/region_tax.dart';
 import '../../data/models/tax_bracket.dart';
 import '../../data/models/tax_config.dart';
+import '../entities/calculation_extras.dart';
 import '../entities/deduction.dart';
 import '../entities/paycheck_result.dart';
 
@@ -16,8 +17,11 @@ abstract class TaxCalculator {
     required PayFrequency frequency,
     FilingStatus? filingStatus,
     RegionTax? region,
+    CalculationExtras? extras,
   }) {
-    final annualIncome = _normalizeToAnnual(income, frequency);
+    final extrasAnnual = extras ?? const CalculationExtras();
+    final annualIncome = _normalizeToAnnual(income, frequency) +
+        extrasAnnual.additionalAnnualGross;
 
     final brackets = getBrackets(filingStatus);
 
@@ -32,6 +36,10 @@ abstract class TaxCalculator {
 
     // Apply region-specific deductions (hook)
     taxableIncome = applyRegionDeductions(taxableIncome, filingStatus, region);
+
+    // Pre-tax user deductions (401k/HSA/…) reduce income-tax wages.
+    // The payroll-tax base below is intentionally NOT reduced by them.
+    taxableIncome -= extrasAnnual.preTaxDeductionsAnnual;
 
     taxableIncome = taxableIncome.clamp(0, double.infinity);
 
@@ -50,11 +58,12 @@ abstract class TaxCalculator {
       deductions,
     );
 
-    // Extra taxes (hook)
+    // Extra taxes (hook): computed on the FULL wage base — pre-tax user
+    // deductions such as 401(k) do not reduce Social Security/Medicare wages.
     final extraTotal = calculateExtraTaxes(annualIncome, deductions);
 
     final totalTax = mainTax + regionTaxAmount + extraTotal;
-    final netIncome = annualIncome - totalTax;
+    final netIncome = annualIncome - totalTax - extrasAnnual.postTaxDeductionsAnnual;
 
     return PaycheckResult(
       grossIncome: annualIncome,
@@ -62,6 +71,12 @@ abstract class TaxCalculator {
       totalTax: totalTax,
       effectiveTaxRate: totalTax / annualIncome,
       deductions: deductions,
+      federalTax: mainTax,
+      regionTaxAmount: regionTaxAmount,
+      extraTaxesTotal: extraTotal,
+      preTaxDeductions: extrasAnnual.preTaxDeductionsAnnual,
+      postTaxDeductions: extrasAnnual.postTaxDeductionsAnnual,
+      additionalAnnualIncome: extrasAnnual.additionalAnnualGross,
     );
   }
 
