@@ -10,6 +10,31 @@ import '../../../../domain/usecases/profile_inputs.dart';
 import '../../../../domain/usecases/tax_calculator_factory.dart';
 import '../../../../domain/usecases/tax_data_loader.dart';
 
+/// Computes a saved profile's engine result via the existing engine only.
+/// Shared by the comparison table and the saved-calculations screen.
+Future<PaycheckResult> calculateProfileResult(
+  CalculationProfile profile,
+) async {
+  final calculator = await TaxCalculatorFactory.get(profile.country);
+  final region = await _regionFor(profile);
+  return calculator.calculate(
+    income: profile.income,
+    frequency: profile.payFrequency,
+    filingStatus: profile.filingStatus,
+    region: region,
+    extras: extrasFor(profile),
+  );
+}
+
+Future<RegionTax?> _regionFor(CalculationProfile profile) async {
+  final config = await TaxDataLoader.load(profile.country);
+  if (config.regions == null) return null;
+  for (final r in config.regions!.items) {
+    if (r.code == profile.regionCode) return r;
+  }
+  return null;
+}
+
 /// One per-profile engine result — pure data, nothing cached or mutated.
 class ComparisonRow {
   final CalculationProfile profile;
@@ -76,14 +101,7 @@ class ComparisonProvider extends ChangeNotifier {
     CalculationProfile profile,
     TaxCalculator calculator,
   ) async {
-    RegionTax? region;
-    final config = await TaxDataLoader.load(profile.country);
-    final code = profile.regionCode;
-    if (config.regions != null) {
-      for (final r in config.regions!.items) {
-        if (r.code == code) region = r;
-      }
-    }
+    final region = await _regionFor(profile);
     final result = calculator.calculate(
       income: profile.income,
       frequency: profile.payFrequency,

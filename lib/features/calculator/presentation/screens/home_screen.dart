@@ -12,6 +12,7 @@ import '../widgets/overtime_section.dart';
 import '../widgets/extra_income_section.dart';
 import '../widgets/user_deductions_section.dart';
 import '../widgets/takehome_card.dart';
+import 'saved_calculations_screen.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../provider/calculator_provider.dart';
@@ -79,6 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
           tooltip: 'Save as profile',
           color: profiles.hasUnsavedChanges ? Colors.amber : null,
           onPressed: () => showSaveProfileSheet(context),
+        ),
+        IconButton(
+          icon: const Icon(Icons.list_alt),
+          tooltip: 'Saved calculations',
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const SavedCalculationsScreen()),
+          ),
         ),
       ],
     );
