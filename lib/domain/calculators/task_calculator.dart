@@ -40,7 +40,6 @@ abstract class TaxCalculator {
     // Pre-tax user deductions (401k/HSA/…) reduce income-tax wages.
     // The payroll-tax base below is intentionally NOT reduced by them.
     taxableIncome -= extrasAnnual.preTaxDeductionsAnnual;
-
     taxableIncome = taxableIncome.clamp(0, double.infinity);
 
     // Calculate main tax (hook, can be overridden per country)
@@ -63,7 +62,11 @@ abstract class TaxCalculator {
     final extraTotal = calculateExtraTaxes(annualIncome, deductions);
 
     final totalTax = mainTax + regionTaxAmount + extraTotal;
-    final netIncome = annualIncome - totalTax - extrasAnnual.postTaxDeductionsAnnual;
+    // Net take-home: pre-tax contributions (401k/HSA) also leave the paycheck.
+    final netIncome = annualIncome -
+        totalTax -
+        extrasAnnual.preTaxDeductionsAnnual -
+        extrasAnnual.postTaxDeductionsAnnual;
 
     return PaycheckResult(
       grossIncome: annualIncome,
