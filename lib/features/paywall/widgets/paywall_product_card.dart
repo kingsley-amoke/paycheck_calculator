@@ -40,7 +40,7 @@ class PaywallProductCards extends StatelessWidget {
                 p.price,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                 ),
               )
             : Row(
@@ -50,7 +50,7 @@ class PaywallProductCards extends StatelessWidget {
                       fullAnnualPrice!,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.black.withOpacity(0.4),
+                        color: Colors.black.withValues(alpha: 0.4),
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
@@ -60,7 +60,7 @@ class PaywallProductCards extends StatelessWidget {
                     p.price,
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.black.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -91,7 +91,7 @@ class PaywallProductCards extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected ? accent.withOpacity(0.05) : Colors.white,
+              color: isSelected ? accent.withValues(alpha: 0.05) : Colors.white,
               border: Border.all(
                 color: isSelected ? accent : Colors.black12,
                 width: isSelected ? 1.5 : 1,
@@ -105,7 +105,7 @@ class PaywallProductCards extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        p.durationPlanName,
+                        p.durationPlanName.split(' ').first,
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 15,

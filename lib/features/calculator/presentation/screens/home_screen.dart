@@ -4,7 +4,6 @@ import 'package:paycheck_calculator/features/calculator/presentation/widgets/cou
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/income_input_card.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/location.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/pay_frequency_selector.dart';
-import 'package:paycheck_calculator/features/paywall/paywall_screen_2.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';

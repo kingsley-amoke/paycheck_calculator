@@ -60,14 +60,14 @@ class RegionCard extends StatelessWidget {
               border: borderColor == Colors.transparent
                   ? null
                   : Border.all(
-                      color: borderColor.withOpacity(0.35),
+                      color: borderColor.withValues(alpha: 0.35),
                       width: 1.5,
                     ),
               boxShadow: [
                 BoxShadow(
                   color: scale == 1.0
-                      ? AppColors.primary.withOpacity(0.08)
-                      : Colors.black.withOpacity(0.04),
+                      ? AppColors.primary.withValues(alpha: 0.08)
+                      : Colors.black.withValues(alpha: 0.04),
                   blurRadius: scale == 1.0 ? 40 : 20,
                   offset: const Offset(0, 10),
                 ),

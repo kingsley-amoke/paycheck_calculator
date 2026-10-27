@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:paycheck_calculator/features/subscription/services/revenuecat_service.dart';
-import 'package:provider/provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
-import '../purchase_model.dart';
 
 class PaywallCTAButton extends StatelessWidget {
   final bool isLoading;
-  final void Function() onTap;
+  final void Function()? onTap;
   final String label;
   final Color accent;
 

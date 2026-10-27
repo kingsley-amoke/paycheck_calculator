@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384679493104",
+    "project_id": "paycheck-calculator-495620",
+    "storage_bucket": "paycheck-calculator-495620.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384679493104:android:0c4b3a06ecebb7e2467135",
+        "android_client_info": {
+          "package_name": "com.smoqdev.paycheck_calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtMvM8HpnzUuLomDRskbo2x4jSfi5x5ug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

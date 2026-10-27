@@ -22,7 +22,7 @@ class _GeneratingPageState extends State<GeneratingPage> {
 
   Future<void> _generateIncome() async {
     await context.read<CalculatorProvider>().calculate();
-    Future.delayed(const Duration(seconds: 3), () {
+    await Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
 
       Navigator.pushReplacement(

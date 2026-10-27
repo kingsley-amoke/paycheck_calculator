@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/core/config/theme.dart';
-import 'package:paycheck_calculator/core/widgets/splash.dart';
-import 'package:paycheck_calculator/features/onboarding/screens/hook.dart';
 import 'package:paycheck_calculator/features/onboarding/screens/onboarding_screen.dart';
 import 'package:paycheck_calculator/features/settings/settings_provider.dart';
 import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
@@ -21,7 +19,7 @@ class PaycheckApp extends StatelessWidget {
           ? ThemeMode.dark
           : ThemeMode.light,
       home: Consumer<SubscriptionProvider>(
-        builder: (_, sub, __) {
+        builder: (_, sub, _) {
           // if (sub.hasAccess) {
           //   return MainShell();
           // }

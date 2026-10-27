@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/core/constants/flags.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/calculator_provider.dart';
@@ -13,6 +14,11 @@ class IncomeInputCard extends StatelessWidget {
     final String? initialValue = provider.income > 0
         ? provider.income.toString()
         : null;
+
+    final country = countries.firstWhere(
+      (c) => c.country == provider.country,
+      orElse: () => countries.first,
+    );
 
     final bool focus = provider.income > 0;
 
@@ -48,8 +54,8 @@ class IncomeInputCard extends StatelessWidget {
             initialValue: initialValue,
             autofocus: !focus,
             style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            decoration: const InputDecoration(
-              prefixText: "\$ ",
+            decoration: InputDecoration(
+              prefixText: country.currencySymbol,
               border: InputBorder.none,
             ),
             onChanged: (val) {

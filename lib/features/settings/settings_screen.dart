@@ -1,11 +1,19 @@
+//
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:paycheck_calculator/core/utils/open_url.dart';
+import 'package:paycheck_calculator/features/paywall/subscription_plans_screen.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:provider/provider.dart';
+
+import 'package:paycheck_calculator/core/constants/app_colors.dart';
+import 'package:paycheck_calculator/core/constants/app_strings.dart';
 import 'package:paycheck_calculator/core/constants/flags.dart';
 import 'package:paycheck_calculator/data/models/country_model.dart';
 import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
 import 'package:paycheck_calculator/features/settings/settings_provider.dart';
-import 'package:provider/provider.dart';
-
-import '../../core/constants/app_colors.dart';
+import 'package:paycheck_calculator/features/settings/terms_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,25 +23,100 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  static const Color _primary = Color(0xFF2563EB);
+
+  bool _isRestoring = false;
+
+  Future<void> _restorePurchases() async {
+    if (_isRestoring) return;
+
+    setState(() => _isRestoring = true);
+
+    try {
+      final customerInfo = await Purchases.restorePurchases();
+
+      if (!mounted) return;
+
+      final hasAccess = customerInfo.entitlements.active.containsKey('access');
+
+      _showMessage(
+        hasAccess
+            ? 'Your subscription has been restored successfully.'
+            : 'No active subscription was found for this account.',
+      );
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+
+      _showMessage('Could not restore purchases. Please try again.');
+      debugPrint('Restore purchases error: ${e.code} ${e.message}');
+    } catch (e) {
+      if (!mounted) return;
+
+      _showMessage('Something went wrong. Please try again.');
+      debugPrint('Unexpected restore error: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isRestoring = false);
+      }
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+      );
+  }
+
+  void _openTerms() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const TermsScreen()));
+  }
+
+  void _showSupportDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Help & Support'),
+        content: const Text(
+          'For help with Paycheck Calculator, contact the '
+          'developer using the support contact provided '
+          'on the app’s Google Play Store listing.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<CalculatorProvider>();
+    final calculator = context.watch<CalculatorProvider>();
     final settings = context.watch<SettingsProvider>();
 
-    final country = countries.firstWhere((c) => c.country == provider.country);
+    final country = countries.firstWhere(
+      (c) => c.country == calculator.country,
+      orElse: () => countries.first,
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: _buildHeader(country)),
-            // SliverToBoxAdapter(child: _buildProfile()),
             SliverToBoxAdapter(child: _buildAccountSection(country)),
             SliverToBoxAdapter(child: _buildPreferencesSection(settings)),
             SliverToBoxAdapter(child: _buildSupportSection()),
+            SliverToBoxAdapter(child: _buildLegalSection()),
             SliverToBoxAdapter(child: _buildFooter()),
-            // SliverToBoxAdapter(child: _buildLogout()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 28)),
           ],
         ),
       ),
@@ -42,428 +125,333 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildHeader(CountryOption country) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 16, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: Row(
         children: [
-          const SizedBox(width: 12),
-          const Text(
-            'Settings',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
+          const Expanded(
+            child: Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w800,
+                color: _primary,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
-          const Spacer(),
-          Text(country.flag, style: TextStyle(fontSize: 24)),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.divider),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(country.flag, style: const TextStyle(fontSize: 21)),
+                const SizedBox(width: 8),
+                Text(
+                  country.currency,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildProfile() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 32, 20, 0),
-      child: Column(
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.green, width: 3),
-                ),
-                child: CircleAvatar(
-                  radius: 42,
-                  backgroundColor: const Color(0xFFE5E7EB),
-                  child: ClipOval(
-                    child: Container(
-                      width: 84,
-                      height: 84,
-                      color: const Color(0xFFD1D5DB),
-                      child: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Color(0xFF6B7280),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    'PRO\nUSER',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      height: 1.2,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Alex Thompson',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'alex.t@example.com',
-            style: TextStyle(fontSize: 14, color: AppColors.textGray),
-          ),
-        ],
-      ),
-    );
+  void _openSubscriptionPlans() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SubscriptionPlansScreen()));
   }
 
   Widget _buildAccountSection(CountryOption country) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'ACCOUNT & SUBSCRIPTION',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                _settingsTile(
-                  icon: Icons.credit_card_outlined,
-                  iconBg: AppColors.primary.withValues(alpha: 0.12),
-                  iconColor: AppColors.primary,
-                  title: 'Subscription',
-
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.green.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'Free Trial',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.darkGreen,
-                      ),
-                    ),
-                  ),
-                  showDivider: true,
-                ),
-                _settingsTile(
-                  icon: Icons.account_balance_wallet_outlined,
-                  iconBg: AppColors.textGray.withValues(alpha: 0.12),
-                  iconColor: AppColors.textGray,
-                  title: 'Currency',
-                  trailingText: country.currency,
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
-        ],
+    return _buildSection('ACCOUNT & SUBSCRIPTION', [
+      _settingsTile(
+        icon: Icons.workspace_premium_outlined,
+        iconColor: _primary,
+        iconBg: _primary.withValues(alpha: 0.10),
+        title: 'Subscription plans',
+        subtitle: 'View available plans and pricing',
+        onTap: _openSubscriptionPlans,
       ),
-    );
+      _settingsTile(
+        icon: Icons.credit_card_outlined,
+        iconColor: _primary,
+        iconBg: _primary.withValues(alpha: 0.10),
+        title: 'Manage subscription',
+        subtitle: 'View or cancel through Google Play',
+        onTap: () => openUrl(context, url: playSubscriptionsUrl),
+      ),
+      _settingsTile(
+        icon: Icons.account_balance_wallet_outlined,
+        iconColor: Colors.teal,
+        iconBg: Colors.teal.withValues(alpha: 0.10),
+        title: 'Currency',
+        subtitle: 'Your selected calculation region',
+        trailing: Text(
+          country.currency,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: _primary,
+          ),
+        ),
+        showDivider: false,
+      ),
+    ]);
   }
 
   Widget _buildPreferencesSection(SettingsProvider settings) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'PREFERENCES',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.textDark.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          settings.isDark
-                              ? Icons.dark_mode_outlined
-                              : Icons.sunny,
-                          size: 20,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Text(
-                          'Dark Mode',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Switch(
-                        value: settings.isDark,
-                        onChanged: (v) =>
-                            setState(() => settings.toggleDarkMode(v)),
-                        activeThumbColor: AppColors.primary,
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1, color: AppColors.divider, indent: 56),
-                _settingsTile(
-                  icon: Icons.notifications_outlined,
-                  iconBg: AppColors.textGray.withValues(alpha: 0.12),
-                  iconColor: Theme.of(context).iconTheme.color!,
-                  title: 'Notifications',
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSupportSection() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'SUPPORT & LEGAL',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                _settingsTile(
-                  icon: Icons.help_outline,
-                  iconBg: AppColors.green.withValues(alpha: 0.15),
-                  iconColor: AppColors.green,
-                  title: 'Help & Support',
-                  showDivider: true,
-                ),
-                _settingsTile(
-                  icon: Icons.restore,
-                  iconBg: AppColors.textGray.withValues(alpha: 0.12),
-                  iconColor: AppColors.textGray,
-                  title: 'Restore Purchase',
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  'Privacy Policy',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  'Terms of Service',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'App Version 1.0.0 (Build 2405)',
-            style: TextStyle(fontSize: 12, color: AppColors.textLight),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLogout() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.divider),
-        ),
+    return _buildSection('PREFERENCES', [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.logout, color: AppColors.red, size: 20),
-            SizedBox(width: 10),
-            Text(
-              'Log Out',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.red,
+          children: [
+            _iconBox(Icons.dark_mode_outlined, _primary),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dark mode',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 3),
+                  Text(
+                    'Adjust the app appearance',
+                    style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                  ),
+                ],
               ),
+            ),
+            Switch.adaptive(
+              value: settings.isDark,
+              activeTrackColor: _primary,
+              onChanged: settings.toggleDarkMode,
             ),
           ],
         ),
+      ),
+    ]);
+  }
+
+  Widget _buildSupportSection() {
+    return _buildSection('SUPPORT', [
+      _settingsTile(
+        icon: Icons.help_outline_rounded,
+        iconColor: Colors.teal,
+        iconBg: Colors.teal.withValues(alpha: 0.10),
+        title: 'Help & Support',
+        subtitle: 'Get help with the app',
+        onTap: _showSupportDialog,
+      ),
+      _settingsTile(
+        icon: Icons.restore_rounded,
+        iconColor: _primary,
+        iconBg: _primary.withValues(alpha: 0.10),
+        title: 'Restore purchases',
+        subtitle: 'Recover an existing subscription',
+        trailing: _isRestoring
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : null,
+        onTap: _isRestoring ? null : _restorePurchases,
+        showDivider: false,
+      ),
+    ]);
+  }
+
+  Widget _buildLegalSection() {
+    return _buildSection('LEGAL', [
+      _settingsTile(
+        icon: Icons.privacy_tip_outlined,
+        iconColor: _primary,
+        iconBg: _primary.withValues(alpha: 0.10),
+        title: 'Privacy Policy',
+        subtitle: 'How your information is handled',
+        onTap: () => openUrl(context, url: privacyPolicyUrl),
+      ),
+      _settingsTile(
+        icon: Icons.description_outlined,
+        iconColor: Colors.deepOrange,
+        iconBg: Colors.deepOrange.withValues(alpha: 0.10),
+        title: 'Terms of Use',
+        subtitle: 'Subscription and usage conditions',
+        onTap: _openTerms,
+        showDivider: false,
+      ),
+    ]);
+  }
+
+  Widget _buildSection(String title, List<Widget> children) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 2, bottom: 10),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.1,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.65),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.divider.withValues(alpha: 0.7),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.025),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(children: children),
+          ),
+        ],
       ),
     );
   }
 
   Widget _settingsTile({
     required IconData icon,
-    required Color iconBg,
     required Color iconColor,
+    required Color iconBg,
     required String title,
+    String? subtitle,
     Widget? trailing,
-    String? trailingText,
-    required bool showDivider,
+    VoidCallback? onTap,
+    bool showDivider = true,
   }) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconBg,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, size: 20, color: iconColor),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+              child: Row(
+                children: [
+                  _iconBox(icon, iconColor, background: iconBg),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        if (subtitle != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            subtitle,
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              height: 1.4,
+                              color: AppColors.textGray,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                ),
+                  if (trailing != null) ...[const SizedBox(width: 8), trailing],
+                  if (onTap != null) ...[
+                    const SizedBox(width: 6),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 21,
+                      color: AppColors.textLight,
+                    ),
+                  ],
+                ],
               ),
-              ?trailing,
-              if (trailingText != null)
-                Text(
-                  trailingText,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textGray,
-                  ),
-                ),
-              const SizedBox(width: 6),
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.textLight,
-                size: 20,
-              ),
-            ],
+            ),
           ),
         ),
         if (showDivider)
-          const Divider(height: 1, color: AppColors.divider, indent: 56),
+          const Divider(
+            height: 1,
+            thickness: 0.6,
+            indent: 58,
+            endIndent: 16,
+            color: AppColors.divider,
+          ),
       ],
+    );
+  }
+
+  Widget _iconBox(IconData icon, Color color, {Color? background}) {
+    return Container(
+      width: 40,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: background ?? color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon, size: 20, color: color),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 28,
+            color: _primary,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Paycheck Calculator',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            'Version $appVersion',
+            style: const TextStyle(fontSize: 12, color: AppColors.textLight),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Estimates are for informational purposes only.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 11, color: AppColors.textGray),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 name: paycheck_calculator
-description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: "A simple paycheck calculator."
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -17,7 +17,10 @@ dependencies:
   in_app_purchase:
   purchases_flutter:
   purchases_ui_flutter:
-
+  firebase_core: ^4.15.0
+  firebase_remote_config: ^6.7.0
+  firebase_analytics: ^12.6.0
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:
@@ -44,9 +47,7 @@ flutter_native_splash:
     image: assets/images/icon.png
     icon_background_color: "#fafafa"
 
-
 flutter:
-
   uses-material-design: true
 
   assets:
@@ -57,4 +58,3 @@ flutter:
     - assets/taxes/de.json
     - assets/images/icon.png
     - assets/images/
-

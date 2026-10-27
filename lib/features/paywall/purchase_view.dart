@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/core/services/remote_config.dart';
 import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/paywall/models/paywall_package.dart';
 import 'package:paycheck_calculator/features/paywall/models/product.dart';
+import 'package:paycheck_calculator/features/settings/terms_screen.dart';
 import 'package:paycheck_calculator/features/paywall/widgets/hero_placeholder.dart';
 import 'package:paycheck_calculator/features/paywall/widgets/paywall_cta_button.dart';
 import 'package:paycheck_calculator/features/paywall/widgets/paywall_footer.dart';
@@ -25,10 +27,17 @@ class _PurchaseViewState extends State<PurchaseView>
 
   static const Color _accent = Color(0xFF2563EB);
 
+  final reviewAccess = ReviewAccessService();
+
   @override
   void initState() {
     super.initState();
-    _loadOfferings();
+    print(reviewAccess.isEnabled);
+    if (reviewAccess.isEnabled) {
+      return;
+    } else {
+      _loadOfferings();
+    }
   }
 
   Future<void> _loadOfferings() async {
@@ -146,6 +155,14 @@ class _PurchaseViewState extends State<PurchaseView>
     }
   }
 
+  void _reviewBypass() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => MainShell()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,27 +181,28 @@ class _PurchaseViewState extends State<PurchaseView>
                       HeroPlaceholder(color: _accent),
 
                       const SizedBox(height: 24),
-
-                      PaywallProductCards(
-                        products: _packages.map((p) {
-                          return PurchaseProductDetails(
-                            price: p.price,
-                            productId: p.id,
-                            duration: p.duration,
-                            durationPlanName: p.title,
-                            hasTrial: p.hasTrial,
-                          );
-                        }).toList(),
-                        selectedProductId: _selectedProductId,
-                        onSelect: (id) =>
-                            setState(() => _selectedProductId = id),
-                        accent: _accent,
-                        fullAnnualPrice: _fullAnnualFromWeekly != null
-                            ? _formatCurrency(_fullAnnualFromWeekly!)
-                            : null,
-                        formatCurrency: _formatCurrency,
-                        savingsPercent: _percentageSaved,
-                      ),
+                      reviewAccess.isEnabled
+                          ? const SizedBox.shrink()
+                          : PaywallProductCards(
+                              products: _packages.map((p) {
+                                return PurchaseProductDetails(
+                                  price: p.price,
+                                  productId: p.id,
+                                  duration: p.duration,
+                                  durationPlanName: p.title,
+                                  hasTrial: p.hasTrial,
+                                );
+                              }).toList(),
+                              selectedProductId: _selectedProductId,
+                              onSelect: (id) =>
+                                  setState(() => _selectedProductId = id),
+                              accent: _accent,
+                              fullAnnualPrice: _fullAnnualFromWeekly != null
+                                  ? _formatCurrency(_fullAnnualFromWeekly!)
+                                  : null,
+                              formatCurrency: _formatCurrency,
+                              savingsPercent: _percentageSaved,
+                            ),
 
                       const SizedBox(height: 24),
 
@@ -192,20 +210,32 @@ class _PurchaseViewState extends State<PurchaseView>
                         isLoading: _isPurchasing,
                         label: _callToActionText,
                         accent: _accent,
-                        onTap: _purchase,
+                        onTap: reviewAccess.isEnabled
+                            ? _reviewBypass
+                            : _purchase,
                       ),
 
                       const SizedBox(height: 16),
 
-                      const TrialTrustText(),
+                      reviewAccess.isEnabled
+                          ? const SizedBox.shrink()
+                          : const TrialTrustText(),
 
                       const SizedBox(height: 8),
-                      PaywallFooter(
-                        onRestore: () {
-                          Purchases.restorePurchases();
-                        },
-                        onTerms: () {},
-                      ),
+                      reviewAccess.isEnabled
+                          ? const SizedBox.shrink()
+                          : PaywallFooter(
+                              onRestore: () {
+                                Purchases.restorePurchases();
+                              },
+                              onTerms: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const TermsScreen(),
+                                  ),
+                                );
+                              },
+                            ),
                     ],
                   ),
                 ),
