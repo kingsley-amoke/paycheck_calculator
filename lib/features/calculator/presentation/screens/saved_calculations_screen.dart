@@ -5,6 +5,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../data/models/calculation_profile.dart';
 import '../../../../domain/entities/paycheck_result.dart';
+import '../../../../domain/usecases/pay_periods.dart';
 import '../../provider/calculator_provider.dart';
 import '../../provider/comparison_provider.dart';
 import '../../provider/profile_provider.dart';
@@ -123,7 +124,7 @@ class _ProfileCardState extends State<ProfileCard> {
         final netPerPeriod = result == null
             ? ''
             : CurrencyFormatter.format(
-                result.netIncome,
+                result.netIncome / periodsPerYear(profile.payFrequency),
                 country,
               );
 

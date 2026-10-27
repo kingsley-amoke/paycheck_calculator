@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/breakdown_section.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/country_selector.dart';
+import 'package:paycheck_calculator/features/paywall/subscription_plans_screen.dart';
+import 'package:paycheck_calculator/features/subscription/domain/feature_access.dart';
+import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/income_input_card.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/location.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/widgets/pay_frequency_selector.dart';
@@ -13,6 +16,7 @@ import '../widgets/extra_income_section.dart';
 import '../widgets/user_deductions_section.dart';
 import '../widgets/takehome_card.dart';
 import 'saved_calculations_screen.dart';
+import 'compare_calculations_screen.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../provider/calculator_provider.dart';
@@ -89,8 +93,39 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (_) => const SavedCalculationsScreen()),
           ),
         ),
+        IconButton(
+          icon: const Icon(Icons.compare_arrows),
+          tooltip: 'Compare calculations',
+          onPressed: () async {
+            final canCompare = _canCompare();
+            if (canCompare) {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const CompareCalculationsScreen()),
+              );
+              return;
+            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SubscriptionPlansScreen(),
+              ),
+            );
+          },
+        ),
       ],
     );
+  }
+
+  /// Free users can still browse; comparison itself is premium.
+  bool _canCompare() {
+    try {
+      return FeatureAccess.canCompare(context.read<SubscriptionProvider>().hasAccess);
+    } on ProviderNotFoundException {
+      // test/dev wiring without subscription provider — treated as free.
+      return false;
+    }
   }
 
   Widget _buildLocationRow() {
