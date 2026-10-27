@@ -91,6 +91,12 @@ abstract class TaxCalculator {
 
       if (statusConfig?.brackets != null) return statusConfig!.brackets;
     }
+    if (config.brackets != null) return config.brackets!;
+    // Configs without top-level brackets require a filing status; default to
+    // the first configured one rather than crashing on unknown jurisdiction.
+    for (final statusConfig in config.filingStatuses!.values) {
+      if (statusConfig.brackets.isNotEmpty) return statusConfig.brackets;
+    }
     return config.brackets!;
   }
 
