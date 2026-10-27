@@ -82,7 +82,9 @@ class ComparisonProvider extends ChangeNotifier {
   bool isSelected(String id) => selectedIds.contains(id);
 
   /// Resolves saved profiles → engine results via the existing engine only.
-  Future<List<ComparisonRow>> computeRows(List<CalculationProfile> allProfiles) async {
+  Future<List<ComparisonRow>> computeRows(
+    List<CalculationProfile> allProfiles,
+  ) async {
     final rows = <ComparisonRow>[];
     final cache = <Country, Future<TaxCalculator>>{};
 
@@ -90,8 +92,10 @@ class ComparisonProvider extends ChangeNotifier {
       final profile = allProfiles.where((p) => p.id == id).firstOrNull;
       if (profile == null) continue; // deleted mid-session: skip safely
 
-      final calculator =
-          await cache.putIfAbsent(profile.country, () => TaxCalculatorFactory.get(profile.country));
+      final calculator = await cache.putIfAbsent(
+        profile.country,
+        () => TaxCalculatorFactory.get(profile.country),
+      );
       rows.add(await _rowFor(profile, calculator));
     }
     return rows;

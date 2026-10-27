@@ -22,30 +22,33 @@ void main() {
   });
 
   Future<(Box<Map>, Box)> boxes() async {
-    final profiles =
-        await Hive.openBox<Map>(LocalStorageService.profilesBoxName);
+    final profiles = await Hive.openBox<Map>(
+      LocalStorageService.profilesBoxName,
+    );
     final state = await Hive.openBox(LocalStorageService.stateBoxName);
     return (profiles, state);
   }
 
-  test('saveCurrentAs persists and a fresh provider sees it (restart survival)',
-      () async {
-    final (profiles, state) = await boxes();
-    final p1 = ProfileProvider(CalculatorProvider());
-    await p1.load(profilesBox: profiles, stateBox: state);
+  test(
+    'saveCurrentAs persists and a fresh provider sees it (restart survival)',
+    () async {
+      final (profiles, state) = await boxes();
+      final p1 = ProfileProvider(CalculatorProvider());
+      await p1.load(profilesBox: profiles, stateBox: state);
 
-    final id = await p1.saveCurrentAs('Main Job');
-    expect(id, isNotEmpty);
-    expect(p1.profiles, hasLength(1));
-    expect(p1.activeProfileId, id);
+      final id = await p1.saveCurrentAs('Main Job');
+      expect(id, isNotEmpty);
+      expect(p1.profiles, hasLength(1));
+      expect(p1.activeProfileId, id);
 
-    // "restart": fresh provider instance over the same boxes
-    final p2 = ProfileProvider(CalculatorProvider());
-    await p2.load(profilesBox: profiles, stateBox: state);
-    expect(p2.profiles, hasLength(1));
-    expect(p2.profiles.first.name, 'Main Job');
-    expect(p2.activeProfileId, id);
-  });
+      // "restart": fresh provider instance over the same boxes
+      final p2 = ProfileProvider(CalculatorProvider());
+      await p2.load(profilesBox: profiles, stateBox: state);
+      expect(p2.profiles, hasLength(1));
+      expect(p2.profiles.first.name, 'Main Job');
+      expect(p2.activeProfileId, id);
+    },
+  );
 
   test('rename persists', () async {
     final (profiles, state) = await boxes();
@@ -73,10 +76,14 @@ void main() {
     expect(p.profiles, hasLength(2));
     expect(identical(copy.incomeItems, original.incomeItems), isFalse);
 
-    copy.incomeItems.add(const ExtraIncomeItem(
-        id: 'i1', name: 'Bonus', amount: 100));
-    expect(original.incomeItems, isEmpty,
-        reason: 'list mutation must not leak into the original');
+    copy.incomeItems.add(
+      const ExtraIncomeItem(id: 'i1', name: 'Bonus', amount: 100),
+    );
+    expect(
+      original.incomeItems,
+      isEmpty,
+      reason: 'list mutation must not leak into the original',
+    );
 
     // duplicated profile is persisted too
     final fresh = ProfileProvider(CalculatorProvider());
@@ -84,34 +91,39 @@ void main() {
     expect(fresh.profiles, hasLength(2));
   });
 
-  test('activate switches working inputs and persists, snapshot B intact',
-      () async {
-    final (profiles, state) = await boxes();
-    final first = ProfileProvider(CalculatorProvider());
-    await first.load(profilesBox: profiles, stateBox: state);
+  test(
+    'activate switches working inputs and persists, snapshot B intact',
+    () async {
+      final (profiles, state) = await boxes();
+      final first = ProfileProvider(CalculatorProvider());
+      await first.load(profilesBox: profiles, stateBox: state);
 
-    first.calculator.setIncome(75000);
-    final idA = await first.saveCurrentAs('A');
-    first.calculator.setIncome(100000);
-    final idB = await first.saveCurrentAs('B');
-    expect(first.activeProfileId, idB);
-    expect(idA, isNot(idB));
+      first.calculator.setIncome(75000);
+      final idA = await first.saveCurrentAs('A');
+      first.calculator.setIncome(100000);
+      final idB = await first.saveCurrentAs('B');
+      expect(first.activeProfileId, idB);
+      expect(idA, isNot(idB));
 
-    final second = ProfileProvider(CalculatorProvider());
-    await second.load(profilesBox: profiles, stateBox: state);
-    await second.activate(idA);
+      final second = ProfileProvider(CalculatorProvider());
+      await second.load(profilesBox: profiles, stateBox: state);
+      await second.activate(idA);
 
-    expect(second.activeProfileId, idA);
-    expect(second.calculator.income, closeTo(75000, 0.01),
-        reason: 'A was captured at default inputs');
-    expect(second.activeProfile!.name, 'A');
-    expect(state.get(LocalStorageService.activeProfileKey), idA);
-    expect(
-      CalculationProfile.fromJson(await profiles.get(idB)).income,
-      closeTo(100000, 0.01),
-      reason: 'activate(A) must not overwrite snapshot B',
-    );
-  });
+      expect(second.activeProfileId, idA);
+      expect(
+        second.calculator.income,
+        closeTo(75000, 0.01),
+        reason: 'A was captured at default inputs',
+      );
+      expect(second.activeProfile!.name, 'A');
+      expect(state.get(LocalStorageService.activeProfileKey), idA);
+      expect(
+        CalculationProfile.fromJson(await profiles.get(idB)).income,
+        closeTo(100000, 0.01),
+        reason: 'activate(A) must not overwrite snapshot B',
+      );
+    },
+  );
 
   test('deleting the active profile activates the first remaining', () async {
     final (profiles, state) = await boxes();
@@ -130,35 +142,43 @@ void main() {
     expect(p.profiles.single.id, idA);
   });
 
-  test('deleting the last profile clears the active id, calculator untouched',
-      () async {
-    final (profiles, state) = await boxes();
-    final calc = CalculatorProvider();
-    final p = ProfileProvider(calc);
-    await p.load(profilesBox: profiles, stateBox: state);
+  test(
+    'deleting the last profile clears the active id, calculator untouched',
+    () async {
+      final (profiles, state) = await boxes();
+      final calc = CalculatorProvider();
+      final p = ProfileProvider(calc);
+      await p.load(profilesBox: profiles, stateBox: state);
 
-    calc.setIncome(95000);
-    final id = await p.saveCurrentAs('Only');
+      calc.setIncome(95000);
+      final id = await p.saveCurrentAs('Only');
 
-    await p.delete(id);
-    expect(p.activeProfileId, isNull);
-    expect(state.get(LocalStorageService.activeProfileKey), isNull);
-    expect(p.profiles, isEmpty);
-    expect(await profiles.get(id), isNull, reason: 'box entry really removed');
-    expect(calc.income, closeTo(95000, 0.01),
-        reason: 'working calculation keeps its inputs after deleting all');
-  });
+      await p.delete(id);
+      expect(p.activeProfileId, isNull);
+      expect(state.get(LocalStorageService.activeProfileKey), isNull);
+      expect(p.profiles, isEmpty);
+      expect(
+        await profiles.get(id),
+        isNull,
+        reason: 'box entry really removed',
+      );
+      expect(
+        calc.income,
+        closeTo(95000, 0.01),
+        reason: 'working calculation keeps its inputs after deleting all',
+      );
+    },
+  );
 
   test('malformed stored entries are skipped without crashing', () async {
     final (profiles, state) = await boxes();
-    await profiles
-        .put('good', CalculationProfile(id: 'good', name: 'OK').toJson());
+    await profiles.put(
+      'good',
+      CalculationProfile(id: 'good', name: 'OK').toJson(),
+    );
     // entry without id/name: unusable, must be skipped not turned into a ghost
     await profiles.put('garbage', {'income': 'not-a-number'});
-    await profiles.put('garbage2', {
-      'incomeItems': 5,
-      'income': 'zap',
-    });
+    await profiles.put('garbage2', {'incomeItems': 5, 'income': 'zap'});
 
     final p = ProfileProvider(CalculatorProvider());
     await p.load(profilesBox: profiles, stateBox: state);
@@ -224,8 +244,11 @@ void main() {
     await Future<void>.delayed(Duration.zero);
 
     final parsed = CalculationProfile.fromJson(await profiles.get(id));
-    expect(parsed.income, closeTo(95000, 0.01),
-        reason: 'no persistence may happen after dispose');
+    expect(
+      parsed.income,
+      closeTo(95000, 0.01),
+      reason: 'no persistence may happen after dispose',
+    );
   });
 
   test('activate does not echo pre-load state into the profile', () async {
@@ -244,8 +267,11 @@ void main() {
     await Future<void>.delayed(Duration.zero);
 
     final parsed = CalculationProfile.fromJson(await profiles.get(idB));
-    expect(parsed.income, closeTo(100000, 0.01),
-        reason: 'activate must not clobber the profile with pre-load inputs');
+    expect(
+      parsed.income,
+      closeTo(100000, 0.01),
+      reason: 'activate must not clobber the profile with pre-load inputs',
+    );
     expect(parsed.name, 'B');
   });
 }

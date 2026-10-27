@@ -56,12 +56,12 @@ void main() {
   }
 
   Widget host() => MultiProvider(
-        providers: [
-          ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
-          ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
-        ],
-        child: const MaterialApp(home: SavedCalculationsScreen()),
-      );
+    providers: [
+      ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
+      ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
+    ],
+    child: const MaterialApp(home: SavedCalculationsScreen()),
+  );
 
   testWidgets('empty state offers to save a calculation', (tester) async {
     await tester.pumpWidget(host());
@@ -83,16 +83,19 @@ void main() {
     await drain(tester);
     await drain(tester);
     // real async: engine results for the cards
-    await tester.runAsync(() => Future<void>.delayed(
-          const Duration(milliseconds: 30),
-        ));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 30)),
+    );
     await tester.pump();
 
     expect(find.text('Main Job'), findsOneWidget);
     expect(find.text('New Offer'), findsOneWidget);
     expect(find.textContaining('Annually ·'), findsWidgets);
-    expect(find.text('Active'), findsOneWidget,
-        reason: 'exactly one profile is active');
+    expect(
+      find.text('Active'),
+      findsOneWidget,
+      reason: 'exactly one profile is active',
+    );
   });
 
   testWidgets('overflow menu lists the five profile actions', (tester) async {
@@ -105,7 +108,13 @@ void main() {
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
 
-    for (final action in ['Open', 'Activate', 'Duplicate', 'Rename', 'Delete']) {
+    for (final action in [
+      'Open',
+      'Activate',
+      'Duplicate',
+      'Rename',
+      'Delete',
+    ]) {
       expect(find.text(action), findsOneWidget, reason: action);
     }
   });
@@ -176,12 +185,14 @@ void main() {
     expect(find.text('Active'), findsOneWidget);
 
     // open card A's overflow menu (cards render in Hive key order)
-    await tester.tap(find.descendant(
-      of: find.byWidgetPredicate(
-        (w) => w is ProfileCard && w.profile.name == 'A',
+    await tester.tap(
+      find.descendant(
+        of: find.byWidgetPredicate(
+          (w) => w is ProfileCard && w.profile.name == 'A',
+        ),
+        matching: find.byIcon(Icons.more_vert),
       ),
-      matching: find.byIcon(Icons.more_vert),
-    ));
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Activate'));
     await tester.pumpAndSettle();

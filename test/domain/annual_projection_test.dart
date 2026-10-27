@@ -6,12 +6,12 @@ import 'package:paycheck_calculator/domain/entities/paycheck_result.dart';
 import 'package:paycheck_calculator/domain/usecases/annual_projection.dart';
 
 PaycheckResult resultOf(double annualNet, double annualGross) => PaycheckResult(
-      grossIncome: annualGross,
-      netIncome: annualNet,
-      totalTax: annualGross - annualNet,
-      effectiveTaxRate: (annualGross - annualNet) / annualGross,
-      deductions: const <Deduction>[],
-    );
+  grossIncome: annualGross,
+  netIncome: annualNet,
+  totalTax: annualGross - annualNet,
+  effectiveTaxRate: (annualGross - annualNet) / annualGross,
+  deductions: const <Deduction>[],
+);
 
 void main() {
   test('biweekly profile distributes paydays across months (2026)', () {
@@ -27,17 +27,29 @@ void main() {
     expect(points, hasLength(12));
     final julNet = points[6].net;
     final janNet = points[0].net;
-    expect(janNet, julNet,
-        reason: 'Jan and Jul 2026 each hold 3 of 26 biweekly paydays');
+    expect(
+      janNet,
+      julNet,
+      reason: 'Jan and Jul 2026 each hold 3 of 26 biweekly paydays',
+    );
     final februaryNet = points[1].net;
-    expect(februaryNet, closeTo(janNet * 2 / 3, 0.01),
-        reason: 'February holds 2 of 26 paydays');
+    expect(
+      februaryNet,
+      closeTo(janNet * 2 / 3, 0.01),
+      reason: 'February holds 2 of 26 paydays',
+    );
     final sum = points.fold(0.0, (s, pt) => s + pt.net);
-    expect(sum, closeTo(annualNet, 1e-6),
-        reason: 'the projection must sum to the engine annual result');
+    expect(
+      sum,
+      closeTo(annualNet, 1e-6),
+      reason: 'the projection must sum to the engine annual result',
+    );
     final grossSum = points.fold(0.0, (s, pt) => s + pt.gross);
-    expect(grossSum, closeTo(52000, 1e-6),
-        reason: 'gross distributes identically');
+    expect(
+      grossSum,
+      closeTo(52000, 1e-6),
+      reason: 'gross distributes identically',
+    );
   });
 
   test('monthly profile puts exactly one paycheck in each month', () {
@@ -76,10 +88,7 @@ void main() {
       );
       final net = 26000.0;
       final points = projectYear(p, resultOf(net, 52000), year: year);
-      expect(
-        points.fold(0.0, (s, pt) => s + pt.net),
-        closeTo(net, 1e-4),
-      );
+      expect(points.fold(0.0, (s, pt) => s + pt.net), closeTo(net, 1e-4));
     }
   });
 }

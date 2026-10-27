@@ -20,7 +20,8 @@ abstract class TaxCalculator {
     CalculationExtras? extras,
   }) {
     final extrasAnnual = extras ?? const CalculationExtras();
-    final annualIncome = _normalizeToAnnual(income, frequency) +
+    final annualIncome =
+        _normalizeToAnnual(income, frequency) +
         extrasAnnual.additionalAnnualGross;
 
     final brackets = getBrackets(filingStatus);
@@ -63,7 +64,8 @@ abstract class TaxCalculator {
 
     final totalTax = mainTax + regionTaxAmount + extraTotal;
     // Net take-home: pre-tax contributions (401k/HSA) also leave the paycheck.
-    final netIncome = annualIncome -
+    final netIncome =
+        annualIncome -
         totalTax -
         extrasAnnual.preTaxDeductionsAnnual -
         extrasAnnual.postTaxDeductionsAnnual;

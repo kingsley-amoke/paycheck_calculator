@@ -126,10 +126,7 @@ class _Projection extends StatelessWidget {
               '${payFrequencyLabel(profile.payFrequency).toLowerCase()} '
               'paydays by calendar pay dates; withholding is the engine\'s '
               'annualized estimate; taxes/credits not modeled.',
-              style: const TextStyle(
-                fontSize: 11,
-                color: AppColors.textLight,
-              ),
+              style: const TextStyle(fontSize: 11, color: AppColors.textLight),
             ),
           ],
         );

@@ -35,9 +35,12 @@ List<MonthlyProjectionPoint> projectYear(
   int? year,
 }) {
   final y = year ?? DateTime.now().year;
-  final grossByPeriods =
-      annualResult.grossIncome > 0 ? annualResult.grossIncome : 0.0;
-  final netByPeriods = annualResult.netIncome > 0 ? annualResult.netIncome : 0.0;
+  final grossByPeriods = annualResult.grossIncome > 0
+      ? annualResult.grossIncome
+      : 0.0;
+  final netByPeriods = annualResult.netIncome > 0
+      ? annualResult.netIncome
+      : 0.0;
 
   final periodsByMonth = payPeriodsByMonth(y, profile.payFrequency);
   final totalPeriods = periodsByMonth.fold(0.0, (s, v) => s + v);
@@ -49,7 +52,9 @@ List<MonthlyProjectionPoint> projectYear(
         gross: totalPeriods > 0
             ? grossByPeriods * periodsByMonth[m] / totalPeriods
             : 0,
-        net: totalPeriods > 0 ? netByPeriods * periodsByMonth[m] / totalPeriods : 0,
+        net: totalPeriods > 0
+            ? netByPeriods * periodsByMonth[m] / totalPeriods
+            : 0,
       ),
   ];
 }

@@ -5,7 +5,20 @@ import '../../../../domain/usecases/annual_projection.dart';
 
 enum ProjectionSeries { net, gross }
 
-const _monthLetters = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const _monthLetters = [
+  'J',
+  'F',
+  'M',
+  'A',
+  'M',
+  'J',
+  'J',
+  'A',
+  'S',
+  'O',
+  'N',
+  'D',
+];
 
 /// Twelve month bars, value-scaled, single selectable series (Net or Gross).
 /// Bars recompute on layout width via [LayoutBuilder].
@@ -32,17 +45,18 @@ class _MonthlyBarsChartState extends State<MonthlyBarsChart> {
           children: [
             GestureDetector(
               onHorizontalDragDown: (details) => setState(() {
-                final bar = (details.localPosition.dx /
-                        constraints.maxWidth.floorToDouble())
-                    .clamp(0, 12)
-                    .toInt();
+                final bar =
+                    (details.localPosition.dx /
+                            constraints.maxWidth.floorToDouble())
+                        .clamp(0, 12)
+                        .toInt();
                 _selectedMonth = bar.toDouble() + 1;
               }),
               onTapUp: (details) {
-                final bar = (details.localPosition.dx /
-                        (constraints.maxWidth / 12))
-                    .floor()
-                    .clamp(0, 11);
+                final bar =
+                    (details.localPosition.dx / (constraints.maxWidth / 12))
+                        .floor()
+                        .clamp(0, 11);
                 setState(() => _selectedMonth = bar.toDouble() + 1);
               },
               child: AspectRatio(
@@ -64,9 +78,7 @@ class _MonthlyBarsChartState extends State<MonthlyBarsChart> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: ChoiceChip(
-                      label: Text(
-                        s == ProjectionSeries.net ? 'Net' : 'Gross',
-                      ),
+                      label: Text(s == ProjectionSeries.net ? 'Net' : 'Gross'),
                       selected: _series == s,
                       onSelected: (_) => setState(() {
                         _series = s;
@@ -140,7 +152,10 @@ class MonthlyBarsChartPainter extends CustomPainter {
         ),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(canvas, Offset(i * slot + (slot - tp.width) / 2, chartHeight + 2));
+      tp.paint(
+        canvas,
+        Offset(i * slot + (slot - tp.width) / 2, chartHeight + 2),
+      );
     }
 
     // baseline

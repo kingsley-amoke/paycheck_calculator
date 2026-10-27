@@ -34,15 +34,15 @@ class _StubRevenueCatService implements RevenueCatService {
 }
 
 Widget host() => MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(
-            create: (_) =>
-                SubscriptionProvider(_StubRevenueCatService())),
-      ],
-      child: const MaterialApp(home: SettingsScreen()),
-    );
+  providers: [
+    ChangeNotifierProvider(create: (_) => CalculatorProvider()),
+    ChangeNotifierProvider(create: (_) => SettingsProvider()),
+    ChangeNotifierProvider(
+      create: (_) => SubscriptionProvider(_StubRevenueCatService()),
+    ),
+  ],
+  child: const MaterialApp(home: SettingsScreen()),
+);
 
 void main() {
   test('FeatureAccess gates by limits without touching saved data', () {
@@ -56,22 +56,27 @@ void main() {
     expect(FeatureAccess.canAddItem(2, true), isTrue);
   });
 
-  testWidgets('budget tile shows fallback dialog when destination unconfigured',
-      (tester) async {
-    expect(ExpenseTrackerConfig.isConfigured, isFalse,
-        reason: 'no destination is shipped in the codebase');
+  testWidgets(
+    'budget tile shows fallback dialog when destination unconfigured',
+    (tester) async {
+      expect(
+        ExpenseTrackerConfig.isConfigured,
+        isFalse,
+        reason: 'no destination is shipped in the codebase',
+      );
 
-    await tester.pumpWidget(host());
-    await tester.pump();
-    expect(find.text('Manage Your Budget'), findsOneWidget);
+      await tester.pumpWidget(host());
+      await tester.pump();
+      expect(find.text('Manage Your Budget'), findsOneWidget);
 
-    await tester.tap(find.text('Manage Your Budget'));
-    await tester.pump();
+      await tester.tap(find.text('Manage Your Budget'));
+      await tester.pump();
 
-    expect(
-      find.textContaining('Expense Tracker'),
-      findsWidgets,
-      reason: 'fallback explains the unconfigured destination',
-    );
-  });
+      expect(
+        find.textContaining('Expense Tracker'),
+        findsWidgets,
+        reason: 'fallback explains the unconfigured destination',
+      );
+    },
+  );
 }

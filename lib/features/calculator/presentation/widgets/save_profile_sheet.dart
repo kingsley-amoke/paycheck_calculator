@@ -38,7 +38,9 @@ void showSaveProfileSheet(BuildContext context) {
             ),
             const SizedBox(height: 12),
             if (!FeatureAccess.canAddProfile(
-                profileProvider.profiles.length, hasAccess))
+              profileProvider.profiles.length,
+              hasAccess,
+            ))
               const Padding(
                 padding: EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -61,7 +63,9 @@ void showSaveProfileSheet(BuildContext context) {
               onPressed: () async {
                 debugPrint('DBG save pressed canAdd check');
                 final canAdd = FeatureAccess.canAddProfile(
-                    profileProvider.profiles.length, hasAccess);
+                  profileProvider.profiles.length,
+                  hasAccess,
+                );
                 if (!canAdd) return; // upgrade prompt row explains the limit
                 final name = nameController.text.trim().isEmpty
                     ? 'My Calculation ${profileProvider.profiles.length + 1}'

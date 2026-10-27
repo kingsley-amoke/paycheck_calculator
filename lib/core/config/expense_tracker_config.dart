@@ -13,8 +13,7 @@ class ExpenseTrackerConfig {
   /// Test-only override for the unconfigured case.
   static String? storeUrlOverride;
 
-  static bool get isConfigured =>
-      storeUrlOverride != null || storeUrl != null;
+  static bool get isConfigured => storeUrlOverride != null || storeUrl != null;
 
   static String? get effectiveStoreUrl => storeUrlOverride ?? storeUrl;
 }

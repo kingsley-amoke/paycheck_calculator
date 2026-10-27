@@ -11,17 +11,16 @@ void main() {
     double income = 75000,
     double otHours = 0,
     double otRate = 30,
-  }) =>
-      CalculationProfile(
-        id: id,
-        name: 'Profile $id',
-        country: Country.us,
-        payFrequency: PayFrequency.biWeekly,
-        income: income,
-        overtime: otHours > 0
-            ? OvertimeInput(hoursPerPeriod: otHours, explicitRate: otRate)
-            : null,
-      );
+  }) => CalculationProfile(
+    id: id,
+    name: 'Profile $id',
+    country: Country.us,
+    payFrequency: PayFrequency.biWeekly,
+    income: income,
+    overtime: otHours > 0
+        ? OvertimeInput(hoursPerPeriod: otHours, explicitRate: otRate)
+        : null,
+  );
 
   test('toggle caps selection at 4', () {
     final p = ComparisonProvider();

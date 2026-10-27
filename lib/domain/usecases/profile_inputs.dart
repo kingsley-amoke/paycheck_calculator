@@ -47,7 +47,9 @@ double extraIncomeAnnual(CalculationProfile p) {
   var total = 0.0;
   for (final item in p.incomeItems) {
     final amount = item.amount > 0 ? item.amount : 0.0;
-    total += item.occurrence == ExtraIncomeOccurrence.oncePerYear ? amount : amount * periods;
+    total += item.occurrence == ExtraIncomeOccurrence.oncePerYear
+        ? amount
+        : amount * periods;
   }
   return total;
 }
@@ -72,8 +74,9 @@ CalculationExtras extrasFromInputs({
   var extraIncome = 0.0;
   for (final item in incomeItems) {
     final amount = item.amount > 0 ? item.amount : 0.0;
-    extraIncome +=
-        item.occurrence == ExtraIncomeOccurrence.oncePerYear ? amount : amount * periods;
+    extraIncome += item.occurrence == ExtraIncomeOccurrence.oncePerYear
+        ? amount
+        : amount * periods;
   }
 
   final annualBase = ordinary + otAnnual + extraIncome;
@@ -99,10 +102,10 @@ CalculationExtras extrasFromInputs({
 
 /// Convenience wrapper for full profiles.
 CalculationExtras extrasFor(CalculationProfile p) => extrasFromInputs(
-      hourlyRate: p.hourlyRate,
-      frequency: p.payFrequency,
-      income: p.income,
-      overtime: p.overtime,
-      incomeItems: p.incomeItems,
-      userDeductions: p.deductions,
-    );
+  hourlyRate: p.hourlyRate,
+  frequency: p.payFrequency,
+  income: p.income,
+  overtime: p.overtime,
+  incomeItems: p.incomeItems,
+  userDeductions: p.deductions,
+);

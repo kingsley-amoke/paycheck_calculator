@@ -7,7 +7,8 @@ class LocalStorageService {
   static const String stateBoxName = 'app_state';
   static const String activeProfileKey = 'active_profile_id';
 
-  static Future<Box<Map>> openProfilesBox() => Hive.openBox<Map>(profilesBoxName);
+  static Future<Box<Map>> openProfilesBox() =>
+      Hive.openBox<Map>(profilesBoxName);
 
   static Future<Box> openStateBox() => Hive.openBox(stateBoxName);
 }

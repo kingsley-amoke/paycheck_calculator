@@ -48,12 +48,12 @@ void main() {
   });
 
   Widget host() => MultiProvider(
-        providers: [
-          ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
-          ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
-        ],
-        child: const MaterialApp(home: AnnualProjectionScreen()),
-      );
+    providers: [
+      ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
+      ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
+    ],
+    child: const MaterialApp(home: AnnualProjectionScreen()),
+  );
 
   Future<void> drain(WidgetTester tester) async {
     await tester.runAsync(() async {
@@ -99,8 +99,7 @@ void main() {
     expect(find.textContaining('Annual'), findsWidgets);
   });
 
-  testWidgets('totals row is formatted with CurrencyFormatter',
-      (tester) async {
+  testWidgets('totals row is formatted with CurrencyFormatter', (tester) async {
     await profiles.saveCurrentAs('Main Job');
     await tester.pumpWidget(host());
     await tester.pump();

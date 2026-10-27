@@ -28,8 +28,8 @@ class ExtraTax {
           : null,
       brackets: json['brackets'] != null
           ? (json['brackets'] as List)
-          .map((e) => TaxBracket.fromJson(e))
-          .toList()
+                .map((e) => TaxBracket.fromJson(e))
+                .toList()
           : null,
     );
   }

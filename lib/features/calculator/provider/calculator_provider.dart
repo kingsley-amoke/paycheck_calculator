@@ -6,7 +6,8 @@ import '../../../data/models/region_tax.dart';
 import '../../../domain/entities/calculation_extras.dart';
 import '../../../domain/entities/paycheck_result.dart';
 import '../../../domain/usecases/hourly_converter.dart';
-import '../../../domain/usecases/pay_periods.dart';import '../../../domain/usecases/profile_inputs.dart';
+import '../../../domain/usecases/pay_periods.dart';
+import '../../../domain/usecases/profile_inputs.dart';
 import '../../../domain/usecases/tax_calculator_factory.dart';
 import '../../../domain/usecases/tax_data_loader.dart';
 
@@ -119,19 +120,19 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   CalculationExtras buildExtras() => extrasFromInputs(
-        hourlyRate: hourlyRate,
-        frequency: frequency,
-        income: income,
-        overtime: overtimeHoursPerPeriod > 0
-            ? OvertimeInput(
-                hoursPerPeriod: overtimeHoursPerPeriod,
-                explicitRate: overtimeRate,
-                multiplier: overtimeMultiplier,
-              )
-            : null,
-        incomeItems: incomeItems,
-        userDeductions: userDeductions,
-      );
+    hourlyRate: hourlyRate,
+    frequency: frequency,
+    income: income,
+    overtime: overtimeHoursPerPeriod > 0
+        ? OvertimeInput(
+            hoursPerPeriod: overtimeHoursPerPeriod,
+            explicitRate: overtimeRate,
+            multiplier: overtimeMultiplier,
+          )
+        : null,
+    incomeItems: incomeItems,
+    userDeductions: userDeductions,
+  );
 
   // 🔄 UPDATE INPUTS
   void setIncome(double value) {
@@ -191,8 +192,9 @@ class CalculatorProvider extends ChangeNotifier {
     overtimeHoursPerPeriod = hoursPerPeriod > 0 ? hoursPerPeriod : 0;
     if (overtimeHoursPerPeriod > 0) {
       overtimeRate = rate != null && rate > 0 ? rate : null;
-      overtimeMultiplier =
-          multiplier != null && multiplier > 0 ? multiplier : null;
+      overtimeMultiplier = multiplier != null && multiplier > 0
+          ? multiplier
+          : null;
       if (hourlyRate != null) this.hourlyRate = hourlyRate;
     }
     calculate();
@@ -218,7 +220,10 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   void removeIncomeItem(String id) {
-    incomeItems = [for (final i in incomeItems) if (i.id != id) i];
+    incomeItems = [
+      for (final i in incomeItems)
+        if (i.id != id) i,
+    ];
     calculate();
   }
 
@@ -235,7 +240,10 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   void removeDeduction(String id) {
-    userDeductions = [for (final d in userDeductions) if (d.id != id) d];
+    userDeductions = [
+      for (final d in userDeductions)
+        if (d.id != id) d,
+    ];
     calculate();
   }
 

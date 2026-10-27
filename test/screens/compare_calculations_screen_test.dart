@@ -50,13 +50,13 @@ void main() {
   });
 
   Widget host() => MultiProvider(
-        providers: [
-          ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
-          ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
-          ChangeNotifierProvider<ComparisonProvider>.value(value: comparison),
-        ],
-        child: const MaterialApp(home: CompareCalculationsScreen()),
-      );
+    providers: [
+      ChangeNotifierProvider<CalculatorProvider>.value(value: calc),
+      ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
+      ChangeNotifierProvider<ComparisonProvider>.value(value: comparison),
+    ],
+    child: const MaterialApp(home: CompareCalculationsScreen()),
+  );
 
   Future<void> drain(WidgetTester tester) async {
     await tester.runAsync(() async {
@@ -73,8 +73,9 @@ void main() {
     await drain(tester);
   }
 
-  testWidgets('selecting 2 profiles renders table with net pay winner banner',
-      (tester) async {
+  testWidgets('selecting 2 profiles renders table with net pay winner banner', (
+    tester,
+  ) async {
     final idA = await profiles.saveCurrentAs('Base');
     calc.setIncome(120000);
     final idB = await profiles.saveCurrentAs('Raise');
@@ -93,8 +94,11 @@ void main() {
     expect(find.text('Base'), findsWidgets);
     expect(find.text('Raise'), findsWidgets);
     expect(find.text('Estimated net pay'), findsOneWidget);
-    expect(find.text('Higher net pay: Raise'), findsOneWidget,
-        reason: 'engine net must pick the larger salary');
+    expect(
+      find.text('Higher net pay: Raise'),
+      findsOneWidget,
+      reason: 'engine net must pick the larger salary',
+    );
     expect(idA, isNot(idB));
   });
 
@@ -147,8 +151,9 @@ void main() {
     expect(comparison.selectedIds.length, 4);
   });
 
-  testWidgets('deleting a selected profile mid-session does not crash',
-      (tester) async {
+  testWidgets('deleting a selected profile mid-session does not crash', (
+    tester,
+  ) async {
     final idA = await profiles.saveCurrentAs('Base');
     calc.setIncome(1000);
     await profiles.saveCurrentAs('Raise');

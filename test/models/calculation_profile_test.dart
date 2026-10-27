@@ -3,40 +3,37 @@ import 'package:paycheck_calculator/core/constants/enums.dart';
 import 'package:paycheck_calculator/data/models/calculation_profile.dart';
 
 CalculationProfile fullProfile() => CalculationProfile(
-      id: 'abc123',
-      name: 'Main Job',
-      country: Country.us,
-      payFrequency: PayFrequency.biWeekly,
-      income: 2600,
-      filingStatus: FilingStatus.marriedJointly,
-      regionCode: 'CA',
-      hourlyRate: 25,
-      hoursPerWeek: 40,
-      overtime: const OvertimeInput(
-        hoursPerPeriod: 4,
-        multiplier: 1.5,
-      ),
-      incomeItems: [
-        const ExtraIncomeItem(
-          id: 'i1',
-          name: 'Quarterly bonus',
-          amount: 500,
-          occurrence: ExtraIncomeOccurrence.everyPaycheck,
-        ),
-      ],
-      deductions: [
-        const UserDeduction(
-          id: 'd1',
-          name: '401k',
-          value: 6,
-          isPercentage: true,
-          preTax: true,
-          kind: DeductionKind.traditional401k,
-        ),
-      ],
-      createdAt: DateTime.utc(2026, 1, 2, 3, 4),
-      updatedAt: DateTime.utc(2026, 2, 3, 4, 5),
-    );
+  id: 'abc123',
+  name: 'Main Job',
+  country: Country.us,
+  payFrequency: PayFrequency.biWeekly,
+  income: 2600,
+  filingStatus: FilingStatus.marriedJointly,
+  regionCode: 'CA',
+  hourlyRate: 25,
+  hoursPerWeek: 40,
+  overtime: const OvertimeInput(hoursPerPeriod: 4, multiplier: 1.5),
+  incomeItems: [
+    const ExtraIncomeItem(
+      id: 'i1',
+      name: 'Quarterly bonus',
+      amount: 500,
+      occurrence: ExtraIncomeOccurrence.everyPaycheck,
+    ),
+  ],
+  deductions: [
+    const UserDeduction(
+      id: 'd1',
+      name: '401k',
+      value: 6,
+      isPercentage: true,
+      preTax: true,
+      kind: DeductionKind.traditional401k,
+    ),
+  ],
+  createdAt: DateTime.utc(2026, 1, 2, 3, 4),
+  updatedAt: DateTime.utc(2026, 2, 3, 4, 5),
+);
 
 void main() {
   test('toJson/fromJson roundtrip preserves every field', () {
@@ -57,7 +54,10 @@ void main() {
     expect(p2.overtime!.multiplier, 1.5);
     expect(p2.overtime!.explicitRate, isNull);
     expect(p2.incomeItems.single.name, 'Quarterly bonus');
-    expect(p2.incomeItems.single.occurrence, ExtraIncomeOccurrence.everyPaycheck);
+    expect(
+      p2.incomeItems.single.occurrence,
+      ExtraIncomeOccurrence.everyPaycheck,
+    );
     expect(p2.deductions.single.kind, DeductionKind.traditional401k);
     expect(p2.deductions.single.isPercentage, isTrue);
     expect(p2.deductions.single.preTax, isTrue);
@@ -85,7 +85,7 @@ void main() {
       'income': -50,
       'hourlyRate': -3,
       'incomeItems': [
-        {'name': 'x', 'amount': -100}
+        {'name': 'x', 'amount': -100},
       ],
     });
 
@@ -106,11 +106,17 @@ void main() {
     expect(copy.id, 'new-id');
     expect(copy.name, 'Copy');
     copy.incomeItems.removeRange(0, copy.incomeItems.length);
-    expect(source.incomeItems, hasLength(1),
-        reason: 'list mutation must not leak back into source');
+    expect(
+      source.incomeItems,
+      hasLength(1),
+      reason: 'list mutation must not leak back into source',
+    );
     copy.deductions.removeAt(0);
-    expect(source.deductions, hasLength(1),
-        reason: 'list mutation must not leak back into source');
+    expect(
+      source.deductions,
+      hasLength(1),
+      reason: 'list mutation must not leak back into source',
+    );
   });
 
   test('percentages above 100 are allowed at model level', () {
@@ -122,8 +128,7 @@ void main() {
       preTax: true,
       kind: DeductionKind.other,
     );
-    final roundTrip =
-        UserDeduction.fromJson(d.toJson());
+    final roundTrip = UserDeduction.fromJson(d.toJson());
     expect(roundTrip.value, 150);
   });
 

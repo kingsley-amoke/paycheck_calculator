@@ -80,10 +80,7 @@ class _CompareCalculationsScreenState extends State<CompareCalculationsScreen> {
             if (selected.length < 2) ...[
               Text(
                 'Select at least two calculations',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textGray,
-                ),
+                style: const TextStyle(fontSize: 14, color: AppColors.textGray),
               ),
             ] else ...[
               FutureBuilder<List<ComparisonRow>>(

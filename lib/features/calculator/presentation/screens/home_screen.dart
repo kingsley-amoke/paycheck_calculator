@@ -103,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => const CompareCalculationsScreen()),
+                  builder: (_) => const CompareCalculationsScreen(),
+                ),
               );
               return;
             }
@@ -149,7 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Free users can still browse; comparison itself is premium.
   bool _canCompare() {
     try {
-      return FeatureAccess.canCompare(context.read<SubscriptionProvider>().hasAccess);
+      return FeatureAccess.canCompare(
+        context.read<SubscriptionProvider>().hasAccess,
+      );
     } on ProviderNotFoundException {
       // test/dev wiring without subscription provider — treated as free.
       return false;

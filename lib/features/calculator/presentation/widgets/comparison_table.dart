@@ -25,34 +25,89 @@ class ComparisonTable extends StatelessWidget {
         .firstWhere((n) => n != null, orElse: () => null);
 
     final incomeSpecs = <_MetricSpec>[
-      _MetricSpec('Gross per pay period', rows,
-          (r) => r.result.grossIncome / r.periodsInYear, true, country, null),
-      _MetricSpec('Additional income', rows,
-          (r) => r.result.additionalAnnualIncome / r.periodsInYear, true,
-          country, null),
-      _MetricSpec('Estimated net pay', rows,
-          (r) => r.result.netIncome / r.periodsInYear, true, country, null),
-      _MetricSpec('Federal income tax', rows,
-          (r) => r.result.federalTax / r.periodsInYear, false, country, null,
-          true),
+      _MetricSpec(
+        'Gross per pay period',
+        rows,
+        (r) => r.result.grossIncome / r.periodsInYear,
+        true,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Additional income',
+        rows,
+        (r) => r.result.additionalAnnualIncome / r.periodsInYear,
+        true,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Estimated net pay',
+        rows,
+        (r) => r.result.netIncome / r.periodsInYear,
+        true,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Federal income tax',
+        rows,
+        (r) => r.result.federalTax / r.periodsInYear,
+        false,
+        country,
+        null,
+        true,
+      ),
       if (anyRegion)
-        _MetricSpec(regionLabel ?? 'State tax', rows,
-            (r) => r.result.regionTaxAmount / r.periodsInYear, false, country,
-            null),
+        _MetricSpec(
+          regionLabel ?? 'State tax',
+          rows,
+          (r) => r.result.regionTaxAmount / r.periodsInYear,
+          false,
+          country,
+          null,
+        ),
       if (anyExtra)
-        _MetricSpec('Social Security / Medicare / other', rows,
-            (r) => r.result.extraTaxesTotal / r.periodsInYear, false, country,
-            null),
-      _MetricSpec('Pre-tax deductions', rows,
-          (r) => r.result.preTaxDeductions / r.periodsInYear, false, country,
-          null),
-      _MetricSpec('Post-tax deductions', rows,
-          (r) => r.result.postTaxDeductions / r.periodsInYear, false, country,
-          null),
-      _MetricSpec('Annual gross', rows, (r) => r.result.grossIncome, true,
-          country, null),
-      _MetricSpec('Annual net', rows, (r) => r.result.netIncome, true, country,
-          null),
+        _MetricSpec(
+          'Social Security / Medicare / other',
+          rows,
+          (r) => r.result.extraTaxesTotal / r.periodsInYear,
+          false,
+          country,
+          null,
+        ),
+      _MetricSpec(
+        'Pre-tax deductions',
+        rows,
+        (r) => r.result.preTaxDeductions / r.periodsInYear,
+        false,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Post-tax deductions',
+        rows,
+        (r) => r.result.postTaxDeductions / r.periodsInYear,
+        false,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Annual gross',
+        rows,
+        (r) => r.result.grossIncome,
+        true,
+        country,
+        null,
+      ),
+      _MetricSpec(
+        'Annual net',
+        rows,
+        (r) => r.result.netIncome,
+        true,
+        country,
+        null,
+      ),
     ];
 
     return SingleChildScrollView(
@@ -229,8 +284,7 @@ class _MetricSpec {
     return best;
   }
 
-  String cell(int i) =>
-      CurrencyFormatter.format(valueOf(rows[i]), country);
+  String cell(int i) => CurrencyFormatter.format(valueOf(rows[i]), country);
 }
 
 class _DeltaChip extends StatelessWidget {

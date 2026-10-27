@@ -43,8 +43,12 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _profilesBox = profilesBox ?? _profilesBox ?? await LocalStorageService.openProfilesBox();
-      _stateBox = stateBox ?? _stateBox ?? await LocalStorageService.openStateBox();
+      _profilesBox =
+          profilesBox ??
+          _profilesBox ??
+          await LocalStorageService.openProfilesBox();
+      _stateBox =
+          stateBox ?? _stateBox ?? await LocalStorageService.openStateBox();
 
       final loaded = <CalculationProfile>[];
       for (final value in _profilesBox!.values) {
@@ -60,7 +64,8 @@ class ProfileProvider extends ChangeNotifier {
       profiles = loaded;
 
       final storedId = _stateBox!.get(LocalStorageService.activeProfileKey);
-      activeProfileId = storedId is String && loaded.any((p) => p.id == storedId)
+      activeProfileId =
+          storedId is String && loaded.any((p) => p.id == storedId)
           ? storedId
           : null;
 
@@ -106,9 +111,18 @@ class ProfileProvider extends ChangeNotifier {
     final a = active.toJson();
     final b = snapshot.toJson();
     for (final k in const [
-      'v', 'id', 'name', 'country', 'payFrequency', 'income',
-      'filingStatus', 'regionCode', 'hourlyRate', 'hoursPerWeek',
-      'createdAt', 'updatedAt',
+      'v',
+      'id',
+      'name',
+      'country',
+      'payFrequency',
+      'income',
+      'filingStatus',
+      'regionCode',
+      'hourlyRate',
+      'hoursPerWeek',
+      'createdAt',
+      'updatedAt',
     ]) {
       if (a[k] != b[k]) return true;
     }
@@ -118,12 +132,11 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   CalculationProfile _workingSnapshotOf(CalculationProfile active) {
-    final snapshot = calculator.snapshotToProfile(
-      id: active.id,
-      name: active.name,
-    )
-      ..createdAt = active.createdAt
-      ..updatedAt = active.updatedAt; // timestamps excluded from the comparison
+    final snapshot =
+        calculator.snapshotToProfile(id: active.id, name: active.name)
+          ..createdAt = active.createdAt
+          ..updatedAt =
+              active.updatedAt; // timestamps excluded from the comparison
     return snapshot;
   }
 
@@ -134,8 +147,7 @@ class ProfileProvider extends ChangeNotifier {
     final active = activeProfile;
     if (box == null || active == null) return;
 
-    final snapshot = _workingSnapshotOf(active)
-      ..updatedAt = DateTime.now();
+    final snapshot = _workingSnapshotOf(active)..updatedAt = DateTime.now();
 
     try {
       await box.put(active.id, snapshot.toJson());
@@ -159,9 +171,7 @@ class ProfileProvider extends ChangeNotifier {
     final renamed = target.copyWith(name: name);
     await box.put(id, renamed.toJson());
 
-    profiles = [
-      for (final p in profiles) p.id == id ? renamed : p,
-    ];
+    profiles = [for (final p in profiles) p.id == id ? renamed : p];
     notifyListeners();
   }
 
@@ -199,7 +209,10 @@ class ProfileProvider extends ChangeNotifier {
     if (box == null || state == null) return;
 
     await box.delete(id);
-    profiles = [for (final p in profiles) if (p.id != id) p];
+    profiles = [
+      for (final p in profiles)
+        if (p.id != id) p,
+    ];
 
     if (activeProfileId == id) {
       final next = profiles.isNotEmpty ? profiles.first : null;

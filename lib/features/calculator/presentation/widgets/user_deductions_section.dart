@@ -50,9 +50,7 @@ class UserDeductionsSection extends StatelessWidget {
             ),
             for (final d in postTax) _deductionRow(calc, d),
           ],
-          addRowButton(
-            () => showDeductionSheet(context, calc, null),
-          ),
+          addRowButton(() => showDeductionSheet(context, calc, null)),
         ],
       ),
     );
@@ -66,10 +64,7 @@ class UserDeductionsSection extends StatelessWidget {
           Expanded(
             child: Text(
               d.name,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ),
           Text(
@@ -87,7 +82,9 @@ class UserDeductionsSection extends StatelessWidget {
 }
 
 String fmtPct(double value) {
-  final s = value % 1 == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+  final s = value % 1 == 0
+      ? value.toStringAsFixed(0)
+      : value.toStringAsFixed(2);
   return s;
 }
 
@@ -167,18 +164,25 @@ void showDeductionSheet(
               initialValue: kind,
               items: const [
                 DropdownMenuItem(
-                    value: DeductionKind.traditional401k,
-                    child: Text('Traditional 401(k)')),
+                  value: DeductionKind.traditional401k,
+                  child: Text('Traditional 401(k)'),
+                ),
                 DropdownMenuItem(
-                    value: DeductionKind.roth401k, child: Text('Roth 401(k)')),
+                  value: DeductionKind.roth401k,
+                  child: Text('Roth 401(k)'),
+                ),
                 DropdownMenuItem(value: DeductionKind.hsa, child: Text('HSA')),
                 DropdownMenuItem(
-                    value: DeductionKind.insurancePremium,
-                    child: Text('Insurance premium')),
+                  value: DeductionKind.insurancePremium,
+                  child: Text('Insurance premium'),
+                ),
                 DropdownMenuItem(
-                    value: DeductionKind.other, child: Text('Other')),
+                  value: DeductionKind.other,
+                  child: Text('Other'),
+                ),
               ],
-              onChanged: (v) => setSheetState(() => kind = v ?? DeductionKind.other),
+              onChanged: (v) =>
+                  setSheetState(() => kind = v ?? DeductionKind.other),
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Type',

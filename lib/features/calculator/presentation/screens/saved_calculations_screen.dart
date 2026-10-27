@@ -47,14 +47,13 @@ class SavedCalculationsScreen extends StatelessWidget {
         child: profiles.isLoading
             ? const Center(child: CircularProgressIndicator())
             : profiles.profiles.isEmpty
-                ? _emptyState(context)
-                : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                    itemCount: profiles.profiles.length,
-                    itemBuilder: (context, index) => ProfileCard(
-                      profile: profiles.profiles[index],
-                    ),
-                  ),
+            ? _emptyState(context)
+            : ListView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                itemCount: profiles.profiles.length,
+                itemBuilder: (context, index) =>
+                    ProfileCard(profile: profiles.profiles[index]),
+              ),
       ),
     );
   }
@@ -64,7 +63,11 @@ class SavedCalculationsScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bookmark_border, size: 44, color: AppColors.textLight),
+          const Icon(
+            Icons.bookmark_border,
+            size: 44,
+            color: AppColors.textLight,
+          ),
           const SizedBox(height: 8),
           const Text(
             'No saved calculations yet',
@@ -118,9 +121,7 @@ class _ProfileCardState extends State<ProfileCard> {
         final result = snapshot.data;
         final grossPerPeriod = result == null
             ? ''
-            : CurrencyFormatter.format(
-                profile.income, country,
-              );
+            : CurrencyFormatter.format(profile.income, country);
         final netPerPeriod = result == null
             ? ''
             : CurrencyFormatter.format(
@@ -162,7 +163,9 @@ class _ProfileCardState extends State<ProfileCard> {
                         if (isActive)
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.secondaryContainer,
                               borderRadius: BorderRadius.circular(999),
@@ -234,8 +237,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 await profiles.activate(profile.id);
                 if (context.mounted) Navigator.pop(context);
               },
-              subtitle:
-                  const Text('Load into the working calculation and edit it'),
+              subtitle: const Text(
+                'Load into the working calculation and edit it',
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.check_circle_outline),
@@ -311,9 +315,7 @@ class _ProfileCardState extends State<ProfileCard> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete calculation'),
-        content: Text(
-          'Delete \'${profile.name}\'? This cannot be undone.',
-        ),
+        content: Text('Delete \'${profile.name}\'? This cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),

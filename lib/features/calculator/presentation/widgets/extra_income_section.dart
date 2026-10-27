@@ -41,7 +41,9 @@ class ExtraIncomeSection extends StatelessWidget {
                         ? 'once / year'
                         : 'per paycheck',
                     style: const TextStyle(
-                        fontSize: 11, color: Color(0xFF6B7280)),
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline, size: 20),
@@ -50,9 +52,7 @@ class ExtraIncomeSection extends StatelessWidget {
                 ],
               ),
             ),
-          addRowButton(
-            () => showIncomeItemSheet(context, calc, null),
-          ),
+          addRowButton(() => showIncomeItemSheet(context, calc, null)),
         ],
       ),
     );
@@ -68,8 +68,7 @@ void showIncomeItemSheet(
   final amountController = TextEditingController(
     text: existing == null ? '' : existing.amount.toString(),
   );
-  var oncePerYear =
-      existing?.occurrence == ExtraIncomeOccurrence.oncePerYear;
+  var oncePerYear = existing?.occurrence == ExtraIncomeOccurrence.oncePerYear;
   final formKey = GlobalKey<FormState>();
 
   showFormSheet(
@@ -94,8 +93,7 @@ void showIncomeItemSheet(
             const SizedBox(height: 12),
             sheetAmountField(
               controller: amountController,
-              hintText:
-                  'Amount ${oncePerYear ? 'per year' : 'per paycheck'}',
+              hintText: 'Amount ${oncePerYear ? 'per year' : 'per paycheck'}',
             ),
             const SizedBox(height: 8),
             Row(

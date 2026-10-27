@@ -14,8 +14,9 @@ void main() {
     calculator = USCalculator(config);
   });
 
-  double lineSum(PaycheckResult r, String startsWith) =>
-      r.deductions.where((d) => d.name.startsWith(startsWith)).fold(0.0, (s, d) => s + d.amount);
+  double lineSum(PaycheckResult r, String startsWith) => r.deductions
+      .where((d) => d.name.startsWith(startsWith))
+      .fold(0.0, (s, d) => s + d.amount);
 
   PaycheckResult baseline({CalculationExtras? extras, double income = 75000}) =>
       calculator.calculate(
@@ -27,10 +28,10 @@ void main() {
 
   test('extras: null reproduces existing engine totals exactly', () {
     before() => calculator.calculate(
-          income: 75000,
-          frequency: PayFrequency.annually,
-          filingStatus: FilingStatus.single,
-        );
+      income: 75000,
+      frequency: PayFrequency.annually,
+      filingStatus: FilingStatus.single,
+    );
 
     final plain = before();
     final withNull = baseline();
@@ -50,8 +51,11 @@ void main() {
 
     expect(extra.grossIncome, closeTo(plain.grossIncome + 10000, 0.01));
     expect(extra.totalTax, greaterThan(plain.totalTax));
-    expect(extra.extraTaxesTotal, closeTo(plain.extraTaxesTotal + 10000 * 0.0765, 0.02),
-        reason: 'extra payroll taxes scale with the raised wage base');
+    expect(
+      extra.extraTaxesTotal,
+      closeTo(plain.extraTaxesTotal + 10000 * 0.0765, 0.02),
+      reason: 'extra payroll taxes scale with the raised wage base',
+    );
     expect(extra.netIncome, closeTo(extra.grossIncome - extra.totalTax, 0.01));
   });
 
@@ -61,16 +65,29 @@ void main() {
       extras: const CalculationExtras(preTaxDeductionsAnnual: 5000),
     );
 
-    expect(lineSum(plain, 'Income Tax'), greaterThan(lineSum(with401k, 'Income Tax')));
-    expect(with401k.extraTaxesTotal, closeTo(plain.extraTaxesTotal, 0.01),
-        reason: '401k lowers income-tax wages, not Social Security/Medicare wages');
     expect(
-      with401k.grossIncome - with401k.totalTax - with401k.preTaxDeductions - with401k.postTaxDeductions,
+      lineSum(plain, 'Income Tax'),
+      greaterThan(lineSum(with401k, 'Income Tax')),
+    );
+    expect(
+      with401k.extraTaxesTotal,
+      closeTo(plain.extraTaxesTotal, 0.01),
+      reason:
+          '401k lowers income-tax wages, not Social Security/Medicare wages',
+    );
+    expect(
+      with401k.grossIncome -
+          with401k.totalTax -
+          with401k.preTaxDeductions -
+          with401k.postTaxDeductions,
       with401k.netIncome,
       reason: 'pre-tax contributions leave the paycheck too',
     );
-    expect(with401k.netIncome, lessThan(plain.netIncome),
-        reason: 'contributed amount exceeds the withholding saving');
+    expect(
+      with401k.netIncome,
+      lessThan(plain.netIncome),
+      reason: 'contributed amount exceeds the withholding saving',
+    );
   });
 
   test('post-tax deduction is subtracted from net only', () {
@@ -81,10 +98,7 @@ void main() {
 
     expect(withPost.totalTax, closeTo(plain.totalTax, 0.01));
     expect(withPost.grossIncome, closeTo(plain.grossIncome, 0.01));
-    expect(
-      withPost.netIncome,
-      closeTo(plain.netIncome - 1000, 0.01),
-    );
+    expect(withPost.netIncome, closeTo(plain.netIncome - 1000, 0.01));
     expect(withPost.postTaxDeductions, 1000);
     expect(withPost.preTaxDeductions, 0);
   });

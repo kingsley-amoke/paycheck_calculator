@@ -21,18 +21,17 @@ class OvertimeInput {
     double? hoursPerPeriod,
     double? explicitRate,
     double? multiplier,
-  }) =>
-      OvertimeInput(
-        hoursPerPeriod: hoursPerPeriod ?? this.hoursPerPeriod,
-        explicitRate: explicitRate ?? this.explicitRate,
-        multiplier: multiplier ?? this.multiplier,
-      );
+  }) => OvertimeInput(
+    hoursPerPeriod: hoursPerPeriod ?? this.hoursPerPeriod,
+    explicitRate: explicitRate ?? this.explicitRate,
+    multiplier: multiplier ?? this.multiplier,
+  );
 
   Map<String, dynamic> toJson() => {
-        if (hoursPerPeriod > 0) 'hoursPerPeriod': hoursPerPeriod,
-        if (explicitRate != null) 'explicitRate': explicitRate,
-        if (multiplier != null) 'multiplier': multiplier,
-      };
+    if (hoursPerPeriod > 0) 'hoursPerPeriod': hoursPerPeriod,
+    if (explicitRate != null) 'explicitRate': explicitRate,
+    if (multiplier != null) 'multiplier': multiplier,
+  };
 
   static OvertimeInput? fromJson(Object? json) {
     if (json is! Map) return null;
@@ -60,11 +59,11 @@ class ExtraIncomeItem {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'amount': amount,
-        'occurrence': occurrence.name,
-      };
+    'id': id,
+    'name': name,
+    'amount': amount,
+    'occurrence': occurrence.name,
+  };
 
   factory ExtraIncomeItem.fromJson(Object? json) {
     if (json is! Map) {
@@ -99,13 +98,13 @@ class UserDeduction {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'value': value,
-        'isPercentage': isPercentage,
-        'preTax': preTax,
-        'kind': kind.name,
-      };
+    'id': id,
+    'name': name,
+    'value': value,
+    'isPercentage': isPercentage,
+    'preTax': preTax,
+    'kind': kind.name,
+  };
 
   factory UserDeduction.fromJson(Object? json) {
     if (json is! Map) {
@@ -117,9 +116,10 @@ class UserDeduction {
       value: _nonNegative(json['value']),
       isPercentage: json['isPercentage'] == true,
       preTax: json['preTax'] == true,
-      kind: DeductionKind.values
-          .where((k) => k.name == json['kind'])
-          .firstOrNull ??
+      kind:
+          DeductionKind.values
+              .where((k) => k.name == json['kind'])
+              .firstOrNull ??
           DeductionKind.other,
     );
   }
@@ -175,10 +175,10 @@ class CalculationProfile {
     List<UserDeduction>? deductions,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : incomeItems = incomeItems ?? <ExtraIncomeItem>[],
-        deductions = deductions ?? <UserDeduction>[],
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : incomeItems = incomeItems ?? <ExtraIncomeItem>[],
+       deductions = deductions ?? <UserDeduction>[],
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   CalculationProfile copyWith({
     String? id,
@@ -198,68 +198,73 @@ class CalculationProfile {
     bool clearFilingStatus = false,
     bool clearRegionCode = false,
     bool clearOvertime = false,
-  }) =>
-      CalculationProfile(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        country: country ?? this.country,
-        payFrequency: payFrequency ?? this.payFrequency,
-        income: income ?? this.income,
-        filingStatus: clearFilingStatus ? null : filingStatus ?? this.filingStatus,
-        regionCode: clearRegionCode ? null : regionCode ?? this.regionCode,
-        hourlyRate: hourlyRate ?? this.hourlyRate,
-        hoursPerWeek: hoursPerWeek ?? this.hoursPerWeek,
-        overtime: clearOvertime ? null : overtime ?? this.overtime,
-        incomeItems: incomeItems ?? List.of(this.incomeItems),
-        deductions: deductions ?? List.of(this.deductions),
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? DateTime.now(),
-      );
+  }) => CalculationProfile(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    country: country ?? this.country,
+    payFrequency: payFrequency ?? this.payFrequency,
+    income: income ?? this.income,
+    filingStatus: clearFilingStatus ? null : filingStatus ?? this.filingStatus,
+    regionCode: clearRegionCode ? null : regionCode ?? this.regionCode,
+    hourlyRate: hourlyRate ?? this.hourlyRate,
+    hoursPerWeek: hoursPerWeek ?? this.hoursPerWeek,
+    overtime: clearOvertime ? null : overtime ?? this.overtime,
+    incomeItems: incomeItems ?? List.of(this.incomeItems),
+    deductions: deductions ?? List.of(this.deductions),
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? DateTime.now(),
+  );
 
   Map<String, dynamic> toJson() => {
-        'v': schemaVersion,
-        'id': id,
-        'name': name,
-        'country': country.name,
-        'payFrequency': payFrequency.name,
-        'income': income,
-        if (filingStatus != null) 'filingStatus': filingStatus!.name,
-        if (regionCode != null) 'regionCode': regionCode,
-        'hourlyRate': hourlyRate,
-        'hoursPerWeek': hoursPerWeek,
-        if (overtime != null) 'overtime': overtime!.toJson(),
-        'incomeItems': incomeItems.map((i) => i.toJson()).toList(),
-        'deductions': deductions.map((d) => d.toJson()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'v': schemaVersion,
+    'id': id,
+    'name': name,
+    'country': country.name,
+    'payFrequency': payFrequency.name,
+    'income': income,
+    if (filingStatus != null) 'filingStatus': filingStatus!.name,
+    if (regionCode != null) 'regionCode': regionCode,
+    'hourlyRate': hourlyRate,
+    'hoursPerWeek': hoursPerWeek,
+    if (overtime != null) 'overtime': overtime!.toJson(),
+    'incomeItems': incomeItems.map((i) => i.toJson()).toList(),
+    'deductions': deductions.map((d) => d.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 
   factory CalculationProfile.fromJson(Object? json) {
-    if (json is! Map) return CalculationProfile(id: generateProfileId(), name: '');
+    if (json is! Map)
+      return CalculationProfile(id: generateProfileId(), name: '');
     return CalculationProfile(
       id: json['id'] is String && (json['id'] as String).isNotEmpty
           ? json['id'] as String
           : generateProfileId(),
       name: json['name'] is String ? json['name'] as String : '',
-      country: Country.values
-          .firstWhere((c) => c.name == json['country'], orElse: () => Country.us),
+      country: Country.values.firstWhere(
+        (c) => c.name == json['country'],
+        orElse: () => Country.us,
+      ),
       payFrequency: PayFrequency.values.firstWhere(
-          (f) => f.name == json['payFrequency'],
-          orElse: () => PayFrequency.annually),
+        (f) => f.name == json['payFrequency'],
+        orElse: () => PayFrequency.annually,
+      ),
       income: _nonNegative(json['income']),
-      filingStatus: FilingStatus.values.where((f) => f.name == json['filingStatus']).firstOrNull,
-      regionCode: json['regionCode'] is String ? json['regionCode'] as String : null,
+      filingStatus: FilingStatus.values
+          .where((f) => f.name == json['filingStatus'])
+          .firstOrNull,
+      regionCode: json['regionCode'] is String
+          ? json['regionCode'] as String
+          : null,
       hourlyRate: _nonNegative(json['hourlyRate']),
       hoursPerWeek: _nonNegative(json['hoursPerWeek']),
       overtime: OvertimeInput.fromJson(json['overtime']),
-      incomeItems: _list(json['incomeItems'])
-          .map(ExtraIncomeItem.fromJson)
-          .where((i) => i.name.isNotEmpty)
-          .toList(),
-      deductions: _list(json['deductions'])
-          .map(UserDeduction.fromJson)
-          .where((d) => d.name.isNotEmpty)
-          .toList(),
+      incomeItems: _list(
+        json['incomeItems'],
+      ).map(ExtraIncomeItem.fromJson).where((i) => i.name.isNotEmpty).toList(),
+      deductions: _list(
+        json['deductions'],
+      ).map(UserDeduction.fromJson).where((d) => d.name.isNotEmpty).toList(),
       createdAt: _dateTime(json['createdAt']) ?? DateTime.now(),
       updatedAt: _dateTime(json['updatedAt']) ?? DateTime.now(),
     );

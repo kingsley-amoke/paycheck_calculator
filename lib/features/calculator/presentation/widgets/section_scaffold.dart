@@ -107,15 +107,16 @@ TextFormField sheetAmountField({
 }) {
   return TextFormField(
     controller: controller,
-    keyboardType:
-        const TextInputType.numberWithOptions(decimal: true),
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
     decoration: InputDecoration(
       hintText: hintText,
       border: const OutlineInputBorder(),
     ),
-    validator: validator ?? (v) {
-      if (double.tryParse(v ?? '') == null) return 'Enter a number';
-      return null;
-    },
+    validator:
+        validator ??
+        (v) {
+          if (double.tryParse(v ?? '') == null) return 'Enter a number';
+          return null;
+        },
   );
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/core/constants/app_colors.dart';
 import 'package:paycheck_calculator/core/widgets/filing_status_label.dart';

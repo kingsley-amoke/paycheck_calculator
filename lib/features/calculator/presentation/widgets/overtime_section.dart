@@ -33,8 +33,9 @@ class OvertimeSection extends StatelessWidget {
           '${calc.overtimeHoursPerPeriod.toStringAsFixed(0)} h @ '
           '${rate.toStringAsFixed(2)}/h ($basis).';
     } else {
-      summary +=
-          calc.hourlyRate > 0 ? 'No overtime entered.' : 'Requires an hourly rate or an explicit OT rate.';
+      summary += calc.hourlyRate > 0
+          ? 'No overtime entered.'
+          : 'Requires an hourly rate or an explicit OT rate.';
     }
 
     return SectionCard(
@@ -46,9 +47,7 @@ class OvertimeSection extends StatelessWidget {
             summary,
             style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
           ),
-          addRowButton(
-            () => showOvertimeSheet(context, calc),
-          ),
+          addRowButton(() => showOvertimeSheet(context, calc)),
         ],
       ),
     );

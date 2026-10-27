@@ -49,10 +49,7 @@ void main() {
       final calc = CalculatorProvider();
       await calc.init();
       final profiles = ProfileProvider(calc)
-        ..load(
-          profilesBox: FakeBox(),
-          stateBox: FakeBox(),
-        );
+        ..load(profilesBox: FakeBox(), stateBox: FakeBox());
       return (calc, profiles);
     }))!;
     return (calc, profiles);
@@ -71,17 +68,16 @@ void main() {
           ChangeNotifierProvider<ProfileProvider>.value(value: profiles),
         ],
         child: MaterialApp(
-          home: Scaffold(
-            body: SingleChildScrollView(child: child),
-          ),
+          home: Scaffold(body: SingleChildScrollView(child: child)),
         ),
       ),
     );
     await tester.pumpAndSettle();
   }
 
-  testWidgets('add income item via bottom sheet updates paycheck result',
-      (tester) async {
+  testWidgets('add income item via bottom sheet updates paycheck result', (
+    tester,
+  ) async {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(tester, const ExtraIncomeSection(), calc, profiles);
     final before = calc.result!.netIncome;
@@ -98,7 +94,6 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 30));
     });
     await tester.pump();
-
 
     expect(find.text('Signing bonus'), findsOneWidget);
     expect(calc.result!.netIncome, greaterThan(before));
@@ -132,8 +127,9 @@ void main() {
     expect(calc.result!.netIncome, lessThan(inflated));
   });
 
-  testWidgets('user deductions group under pre-tax and post-tax headers',
-      (tester) async {
+  testWidgets('user deductions group under pre-tax and post-tax headers', (
+    tester,
+  ) async {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(tester, const UserDeductionsSection(), calc, profiles);
     final before = calc.result!.netIncome;
@@ -152,8 +148,11 @@ void main() {
     await tester.pump();
 
     expect(find.text('401k'), findsOneWidget);
-    expect(calc.result!.netIncome, lessThan(before),
-        reason: 'pre-tax deduction applied');
+    expect(
+      calc.result!.netIncome,
+      lessThan(before),
+      reason: 'pre-tax deduction applied',
+    );
 
     // post-tax loan
     await tester.tap(find.text('ADD'));
@@ -171,10 +170,12 @@ void main() {
     await tester.pump();
 
     expect(find.text('Loan'), findsOneWidget);
-    expect(calc.userDeductions.where((d) => d.preTax).map((d) => d.name),
-        ['401k']);
-    expect(calc.userDeductions.where((d) => !d.preTax).map((d) => d.name),
-        ['Loan']);
+    expect(calc.userDeductions.where((d) => d.preTax).map((d) => d.name), [
+      '401k',
+    ]);
+    expect(calc.userDeductions.where((d) => !d.preTax).map((d) => d.name), [
+      'Loan',
+    ]);
   });
 
   testWidgets('overtime sheet rejects empty hours input', (tester) async {
@@ -192,8 +193,9 @@ void main() {
     expect(calc.overtimeHoursPerPeriod, 0);
   });
 
-  testWidgets('overtime with hours and rate raises the estimate',
-      (tester) async {
+  testWidgets('overtime with hours and rate raises the estimate', (
+    tester,
+  ) async {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(tester, const OvertimeSection(), calc, profiles);
     final before = calc.result!.netIncome;
@@ -215,8 +217,7 @@ void main() {
     expect(calc.result!.netIncome, greaterThan(before));
   });
 
-  testWidgets('save profile sheet creates a persisted profile',
-      (tester) async {
+  testWidgets('save profile sheet creates a persisted profile', (tester) async {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(
       tester,

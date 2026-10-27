@@ -23,7 +23,11 @@ void main() {
 
     expect(byMonth.length, 12);
     expect(byMonth.reduce((a, b) => a + b), 52);
-    expect(byMonth.contains(5), isTrue, reason: 'some months hold 5 weekly paydays');
+    expect(
+      byMonth.contains(5),
+      isTrue,
+      reason: 'some months hold 5 weekly paydays',
+    );
   });
 
   test('monthly frequency has one payday per month', () {

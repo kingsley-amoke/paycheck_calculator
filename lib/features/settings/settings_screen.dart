@@ -276,7 +276,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         iconColor: Colors.teal,
         iconBg: Colors.teal.withValues(alpha: 0.10),
         title: 'Manage Your Budget',
-        subtitle: 'Track your expenses and manage your budget with our Expense Tracker app.',
+        subtitle:
+            'Track your expenses and manage your budget with our Expense Tracker app.',
         onTap: _openExpenseTracker,
       ),
       _settingsTile(
