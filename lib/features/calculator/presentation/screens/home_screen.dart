@@ -17,6 +17,7 @@ import '../widgets/user_deductions_section.dart';
 import '../widgets/takehome_card.dart';
 import 'saved_calculations_screen.dart';
 import 'compare_calculations_screen.dart';
+import 'annual_projection_screen.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../provider/calculator_provider.dart';
@@ -114,8 +115,35 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
+        IconButton(
+          icon: const Icon(Icons.insert_chart_outlined),
+          tooltip: 'Annual projection',
+          onPressed: () async {
+            final canProject = _canProject();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => canProject
+                    ? const AnnualProjectionScreen()
+                    : const SubscriptionPlansScreen(),
+              ),
+            );
+          },
+        ),
       ],
     );
+  }
+
+  /// Free users can still browse; projection itself is premium.
+  bool _canProject() {
+    try {
+      return FeatureAccess.canProject(
+        context.read<SubscriptionProvider>().hasAccess,
+      );
+    } on ProviderNotFoundException {
+      // test/dev wiring without subscription provider — treated as free.
+      return false;
+    }
   }
 
   /// Free users can still browse; comparison itself is premium.
