@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:paycheck_calculator/core/config/expense_tracker_config.dart';
 import 'package:paycheck_calculator/core/utils/open_url.dart';
 import 'package:paycheck_calculator/features/paywall/subscription_plans_screen.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -73,6 +74,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const TermsScreen()));
+  }
+
+  void _openExpenseTracker() {
+    final url = ExpenseTrackerConfig.effectiveStoreUrl;
+    if (url == null) {
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Manage Your Budget'),
+          content: const Text(
+            'Budgeting lives in our Expense Tracker app. Its store '
+            'destination is not configured in this build yet.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    openUrl(context, url: url);
   }
 
   void _showSupportDialog() {
@@ -246,6 +271,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildSupportSection() {
     return _buildSection('SUPPORT', [
+      _settingsTile(
+        icon: Icons.account_balance_wallet_outlined,
+        iconColor: Colors.teal,
+        iconBg: Colors.teal.withValues(alpha: 0.10),
+        title: 'Manage Your Budget',
+        subtitle: 'Track your expenses and manage your budget with our Expense Tracker app.',
+        onTap: _openExpenseTracker,
+      ),
       _settingsTile(
         icon: Icons.help_outline_rounded,
         iconColor: Colors.teal,
