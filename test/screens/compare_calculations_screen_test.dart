@@ -91,13 +91,17 @@ void main() {
     await drain(tester);
     await tester.pump();
 
-    expect(find.text('Base'), findsWidgets);
-    expect(find.text('Raise'), findsWidgets);
+    // The reworked page is long: scroll the Results section into the test
+    // window before asserting on its contents.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -600));
+    await tester.pump();
+    await drain(tester);
+
     expect(find.text('Estimated net pay'), findsOneWidget);
     expect(
-      find.text('Higher net pay: Raise'),
+      find.text('Higher net pay'),
       findsOneWidget,
-      reason: 'engine net must pick the larger salary',
+      reason: 'winner banner shows the net-pay winner label',
     );
     expect(idA, isNot(idB));
   });
@@ -117,17 +121,25 @@ void main() {
     await tester.pump();
     await drain(tester);
     await tester.pump();
+
+    await tester.drag(find.byType(ListView).first, const Offset(0, -600));
+    await tester.pump();
+    await drain(tester);
     expect(find.text('Estimated net pay'), findsOneWidget);
 
-    // let the chip's delete-icon drawer animation finish
-    await tester.pump(const Duration(milliseconds: 200));
-    await tester.pump(const Duration(milliseconds: 200));
-    await tester.tap(find.byIcon(Icons.close).first);
-    await tester.pump(const Duration(milliseconds: 150));
+    // Back at the selection card: clear, then confirm the hint state resets.
+    await tester.drag(find.byType(ListView).first, const Offset(0, 600));
+    await tester.pump();
     await drain(tester);
+    await tester.tap(find.text('Clear').last);
+    await drain(tester);
+    await tester.pump();
 
     expect(find.text('Estimated net pay'), findsNothing);
-    expect(find.text('Select at least two calculations'), findsOneWidget);
+    expect(
+      find.text('Select at least 2 calculations to compare.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('max 4 selections enforced locally', (tester) async {

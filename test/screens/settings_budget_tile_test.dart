@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paycheck_calculator/core/config/expense_tracker_config.dart';
 import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
@@ -57,12 +58,17 @@ void main() {
   });
 
   testWidgets(
-    'budget tile shows fallback dialog when destination unconfigured',
+    'budget tile opens the configured store destination',
     (tester) async {
       expect(
         ExpenseTrackerConfig.isConfigured,
-        isFalse,
-        reason: 'no destination is shipped in the codebase',
+        isTrue,
+        reason: 'the Expense Tracker store destination is shipped',
+      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/url_launcher'),
+        (call) async => true,
       );
 
       await tester.pumpWidget(host());
@@ -73,9 +79,9 @@ void main() {
       await tester.pump();
 
       expect(
-        find.textContaining('Expense Tracker'),
-        findsWidgets,
-        reason: 'fallback explains the unconfigured destination',
+        find.textContaining('not configured'),
+        findsNothing,
+        reason: 'fallback dialog is for unconfigured builds only',
       );
     },
   );

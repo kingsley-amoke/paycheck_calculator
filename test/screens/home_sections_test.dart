@@ -82,7 +82,7 @@ void main() {
     await pump2(tester, const ExtraIncomeSection(), calc, profiles);
     final before = calc.result!.netIncome;
 
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add income'));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).first, 'Signing bonus');
@@ -103,7 +103,7 @@ void main() {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(tester, const ExtraIncomeSection(), calc, profiles);
 
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add income'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, 'Tips');
     await tester.enterText(find.byType(TextField).last, '100');
@@ -116,7 +116,9 @@ void main() {
     await tester.pump();
     final inflated = calc.result!.netIncome;
 
-    await tester.tap(find.byIcon(Icons.delete_outline).first);
+    await tester.tap(find.byTooltip('Income options').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Remove').last);
     await tester.pumpAndSettle();
     await tester.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 30));
@@ -135,7 +137,7 @@ void main() {
     final before = calc.result!.netIncome;
 
     // pre-tax 401k
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add deduction'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, '401k');
     await tester.enterText(find.byType(TextField).last, '500');
@@ -155,7 +157,7 @@ void main() {
     );
 
     // post-tax loan
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add another deduction'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, 'Loan');
     await tester.enterText(find.byType(TextField).last, '25');
@@ -182,7 +184,7 @@ void main() {
     final (calc, profiles) = await makeProviders(tester);
     await pump2(tester, const OvertimeSection(), calc, profiles);
 
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add overtime'));
     await tester.pumpAndSettle();
 
     // leave hours empty, press save
@@ -200,7 +202,7 @@ void main() {
     await pump2(tester, const OvertimeSection(), calc, profiles);
     final before = calc.result!.netIncome;
 
-    await tester.tap(find.text('ADD'));
+    await tester.tap(find.text('Add overtime'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, '5');
     await tester.enterText(find.byType(TextField).last, '50');
@@ -235,7 +237,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).first, 'Main Job');
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save calculation').last);
     await tester.pumpAndSettle();
     // engine recalc futures resolve via real async: drain before asserts
     await tester.runAsync(() async {
