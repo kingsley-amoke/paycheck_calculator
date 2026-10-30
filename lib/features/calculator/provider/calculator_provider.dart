@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/data/models/calculation_profile.dart';
 import 'package:paycheck_calculator/data/models/tax_config.dart';
+import 'package:paycheck_calculator/features/paywall/paywall_scheduler.dart';
 import '../../../core/constants/enums.dart';
 import '../../../data/models/region_tax.dart';
 import '../../../domain/entities/calculation_extras.dart';
@@ -42,9 +43,23 @@ class CalculatorProvider extends ChangeNotifier {
   // 🔥 MAIN CALCULATION
   FilingStatus filingStatus = FilingStatus.single;
 
-  CalculatorProvider() {
+  CalculatorProvider({this.paywallScheduler}) {
     init();
   }
+
+  /// Passes successful user calculations to the interval-paywall logic
+  /// (optional: absent when the host doesn't want paywalls, e.g. tests).
+  final PaywallScheduler? paywallScheduler;
+
+  /// Successful user calculations are counted once per edit burst: bursts
+  /// within this window are coalesced so typing a salary is one calculation.
+  static const Duration calcBurstWindow = Duration(seconds: 3);
+
+  DateTime? _lastUserCalc;
+
+  /// Injectable for deterministic burst tests.
+  @visibleForTesting
+  DateTime Function() clock = DateTime.now;
 
   Future<void> init() async {
     taxConfig = await TaxDataLoader.load(country);
@@ -58,7 +73,7 @@ class CalculatorProvider extends ChangeNotifier {
 
   void setRegion(RegionTax region) {
     selectedRegion = region;
-    calculate();
+    userRecalc();
   }
 
   void setRegionA(RegionTax region) {
@@ -76,8 +91,21 @@ class CalculatorProvider extends ChangeNotifier {
   void setFilingStatus(FilingStatus status) {
     filingStatus = status;
 
-    calculate();
+    userRecalc();
     compare();
+  }
+
+  /// Drives an engine recalculation for a user input change and, once the
+  /// engine succeeds, reports the coalesced calculation to the paywall
+  /// scheduler (initial loads must not count).
+  Future<void> userRecalc() async {
+    await calculate();
+    final now = clock();
+    final isNewBurst =
+        _lastUserCalc == null ||
+        now.difference(_lastUserCalc!) >= calcBurstWindow;
+    _lastUserCalc = now;
+    if (isNewBurst) paywallScheduler?.onCalculationCompleted();
   }
 
   Future<void> calculate() async {
@@ -139,13 +167,13 @@ class CalculatorProvider extends ChangeNotifier {
   // 🔄 UPDATE INPUTS
   void setIncome(double value) {
     income = value;
-    calculate();
+    userRecalc();
     compare();
   }
 
   void setFrequency(PayFrequency value) {
     frequency = value;
-    calculate();
+    userRecalc();
     compare();
     notifyListeners();
   }
@@ -162,7 +190,7 @@ class CalculatorProvider extends ChangeNotifier {
       selectedRegion = null;
     }
 
-    calculate();
+    userRecalc();
     notifyListeners();
   }
 
@@ -199,26 +227,26 @@ class CalculatorProvider extends ChangeNotifier {
           : null;
       if (hourlyRate != null) this.hourlyRate = hourlyRate;
     }
-    calculate();
+    userRecalc();
   }
 
   void clearOvertime() {
     overtimeHoursPerPeriod = 0;
     overtimeRate = null;
     overtimeMultiplier = null;
-    calculate();
+    userRecalc();
   }
 
   // ── ADDITIONAL INCOME ───────────────────────────────────────────────────
 
   void addIncomeItem(ExtraIncomeItem item) {
     incomeItems = [...incomeItems, item];
-    calculate();
+    userRecalc();
   }
 
   void editIncomeItem(String id, ExtraIncomeItem updated) {
     incomeItems = [for (final i in incomeItems) i.id == id ? updated : i];
-    calculate();
+    userRecalc();
   }
 
   void removeIncomeItem(String id) {
@@ -226,19 +254,19 @@ class CalculatorProvider extends ChangeNotifier {
       for (final i in incomeItems)
         if (i.id != id) i,
     ];
-    calculate();
+    userRecalc();
   }
 
   // ── USER DEDUCTIONS ─────────────────────────────────────────────────────
 
   void addDeduction(UserDeduction deduction) {
     userDeductions = [...userDeductions, deduction];
-    calculate();
+    userRecalc();
   }
 
   void editDeduction(String id, UserDeduction updated) {
     userDeductions = [for (final d in userDeductions) d.id == id ? updated : d];
-    calculate();
+    userRecalc();
   }
 
   void removeDeduction(String id) {
@@ -246,7 +274,7 @@ class CalculatorProvider extends ChangeNotifier {
       for (final d in userDeductions)
         if (d.id != id) d,
     ];
-    calculate();
+    userRecalc();
   }
 
   int get periodsInYear => periodsPerYear(frequency);
@@ -280,7 +308,7 @@ class CalculatorProvider extends ChangeNotifier {
       regionB ??= taxConfig!.regions!.items.last;
     }
 
-    await calculate();
+    await userRecalc();
   }
 
   /// Snapshot of the current working inputs as a profile.

@@ -1,7 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paycheck_calculator/core/constants/enums.dart';
+import 'package:paycheck_calculator/core/services/remote_config.dart';
 import 'package:paycheck_calculator/data/models/calculation_profile.dart';
 import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
+import 'package:paycheck_calculator/features/paywall/paywall_scheduler.dart';
+import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
+
+import '../helpers/fake_stubs.dart';
+
+// Remote Config stand-in (no Firebase in unit tests).
+class _StubReviewAccess implements ReviewAccessService {
+  @override
+  bool get isEnabled => false;
+
+  @override
+  Future<void> initialize() async {}
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -124,4 +138,58 @@ void main() {
 
     expect(provider.result!.additionalAnnualIncome, 0);
   });
+
+  test('edit bursts coalesce into single paywall calculations', () async {
+    final scheduler = PaywallScheduler(
+      SubscriptionProvider(
+        StubRevenueCatService.free(),
+        reviewAccess: _StubReviewAccess(),
+      ),
+    );
+    var now = DateTime(2026, 1, 1);
+    final calc = CalculatorProvider(paywallScheduler: scheduler)
+      ..clock = () => now;
+    await Future<void>.delayed(Duration.zero);
+
+    // First edit burst: income keystrokes fire many recalcs quickly.
+    calc.setIncome(80000);
+    await _drain();
+    calc.setIncome(81000);
+    await _drain();
+    calc.setIncome(82000);
+    await _drain();
+    expect(scheduler.calculationsSinceLastShow, 1);
+
+    // A pause past the burst window starts counting the next calculation.
+    now = now.add(const Duration(seconds: 4));
+    calc.setIncome(83000);
+    await _drain();
+    expect(scheduler.calculationsSinceLastShow, 2);
+  });
+
+  test('successful calculations reach the scheduler threshold', () async {
+    final scheduler = PaywallScheduler(
+      SubscriptionProvider(
+        StubRevenueCatService.free(),
+        reviewAccess: _StubReviewAccess(),
+      ),
+    );
+    var now = DateTime(2026, 1, 1);
+    final calc = CalculatorProvider(paywallScheduler: scheduler)
+      ..clock = () => now;
+    await Future<void>.delayed(Duration.zero);
+
+    for (var i = 0; i < PaywallScheduler.calcThreshold; i++) {
+      now = now.add(CalculatorProvider.calcBurstWindow);
+      calc.setIncome(80000 + i * 1000);
+      await _drain();
+    }
+
+    expect(scheduler.shouldShowPaywall, isTrue);
+  });
+}
+
+Future<void> _drain() async {
+  await Future<void>.delayed(Duration.zero);
+  await Future<void>.delayed(Duration.zero);
 }
