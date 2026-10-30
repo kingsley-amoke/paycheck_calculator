@@ -81,6 +81,40 @@ void main() {
     expect(provider.result!.netIncome, greaterThan(before));
   });
 
+  test('salaried multiplier overtime never invents a default rate', () async {
+    await settleInit();
+    provider.setIncome(120000);
+    await Future<void>.delayed(Duration.zero);
+
+    provider.setOvertime(hoursPerPeriod: 5, multiplier: 1.5);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.hourlyRate, 0);
+    expect(
+      provider.result!.additionalAnnualIncome,
+      0,
+      reason: '×hourly overtime without an hourly rate is not computable',
+    );
+  });
+
+  test(
+    'hourly frequency: ordinary income is the overtime rate basis',
+    () async {
+      await settleInit();
+      provider.frequency = PayFrequency.hourly;
+      provider.setIncome(40);
+      await Future<void>.delayed(Duration.zero);
+
+      provider.setOvertime(hoursPerPeriod: 5, multiplier: 1.5);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        provider.result!.additionalAnnualIncome,
+        closeTo(40 * 1.5 * 5 * 52, 0.5),
+      );
+    },
+  );
+
   test('clearOvertime resets to zero extras', () async {
     await settleInit();
     provider.setOvertime(hoursPerPeriod: 5, multiplier: 1.5, hourlyRate: 25);

@@ -16,8 +16,9 @@ class CalculatorProvider extends ChangeNotifier {
   PayFrequency frequency = PayFrequency.annually;
   Country country = Country.us;
 
-  // Hourly converter inputs
-  double hourlyRate = 25;
+  // Hourly converter inputs — no UI setter exists; zero until supplied.
+  // (A non-zero default would silently feed salaried ×hourly overtime.)
+  double hourlyRate = 0;
   double hoursPerWeek = 40;
 
   // Overtime inputs
@@ -120,7 +121,8 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   CalculationExtras buildExtras() => extrasFromInputs(
-    hourlyRate: hourlyRate,
+    // At hourly frequency the ordinary hourly rate *is* the income.
+    hourlyRate: frequency == PayFrequency.hourly ? income : hourlyRate,
     frequency: frequency,
     income: income,
     overtime: overtimeHoursPerPeriod > 0

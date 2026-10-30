@@ -84,7 +84,11 @@ CalculationExtras extrasFromInputs({
   var preTax = 0.0;
   var postTax = 0.0;
   for (final d in userDeductions) {
-    final amount = d.isPercentage ? annualBase * d.value / 100 : d.value;
+    // Percentage values are shares of annual gross; flat values are entered
+    // per pay period (UI: "Amount per period") and must annualize.
+    final amount = d.isPercentage
+        ? annualBase * d.value / 100
+        : d.value * periods;
     final positive = amount > 0 ? amount : 0.0;
     if (d.preTax) {
       preTax += positive;

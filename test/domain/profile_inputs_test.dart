@@ -113,9 +113,30 @@ void main() {
 
       final extras = extrasFor(p);
       // base = (52000 + 6240 gross incl. overtime) → 10% = 5824
-      expect(extras.preTaxDeductionsAnnual, closeTo(5824 + 50, 0.01));
-      expect(extras.postTaxDeductionsAnnual, 25);
+      expect(
+        extras.preTaxDeductionsAnnual,
+        closeTo(5824 + 50 * 26, 0.01),
+        reason: 'per-paycheck union dues annualize ×26',
+      );
+      expect(
+        extras.postTaxDeductionsAnnual,
+        25 * 26,
+        reason: 'per-paycheck loan payment annualizes ×26',
+      );
       expect(extras.additionalAnnualGross, closeTo(6240, 0.01));
     },
   );
+
+  test('annually-frequency deductions stay one-per-year amounts', () {
+    final p = CalculationProfile(
+      id: '1',
+      name: 'x',
+      payFrequency: PayFrequency.annually,
+      income: 75000,
+      deductions: const [
+        UserDeduction(id: 'd1', name: 'Union', value: 240, preTax: true),
+      ],
+    );
+    expect(extrasFor(p).preTaxDeductionsAnnual, 240);
+  });
 }
