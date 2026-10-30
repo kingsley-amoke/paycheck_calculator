@@ -31,7 +31,7 @@ class TaxConfig {
     return TaxConfig(
       country: json['country'],
       currency: json['currency'],
-      deductions: json['deduction'] != null
+      deductions: json['deductions'] != null
           ? Deductions.fromJson(json['deductions'])
           : null,
       regions: json['regions'] != null
