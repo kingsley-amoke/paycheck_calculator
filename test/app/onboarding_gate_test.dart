@@ -8,9 +8,12 @@ import 'package:paycheck_calculator/features/calculator/provider/comparison_prov
 import 'package:paycheck_calculator/features/calculator/provider/profile_provider.dart';
 import 'package:paycheck_calculator/features/settings/settings_provider.dart';
 import 'package:paycheck_calculator/features/subscription/domain/subscription_status.dart';
+import 'package:paycheck_calculator/features/paywall/paywall_scheduler.dart';
 import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:paycheck_calculator/features/subscription/services/revenuecat_service.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+
+import '../helpers/fake_stubs.dart';
 import 'package:provider/provider.dart';
 
 class FakeBox<T> implements Box<T> {
@@ -87,6 +90,10 @@ void main() {
   });
 
   testWidgets('returning user (flag set) lands in MainShell', (tester) async {
+    final subscription = SubscriptionProvider(
+      StubRevenueCatService.free(),
+      reviewAccess: FakeReviewAccess(),
+    );
     Hive.init('/tmp/opencode/hive_gate_test');
     // Pre-open the state box with a real I/O drain so MainShell's
     // idempotent write resolves synchronously afterwards.
@@ -111,8 +118,11 @@ void main() {
           ChangeNotifierProvider<ComparisonProvider>(
             create: (_) => ComparisonProvider(),
           ),
-          ChangeNotifierProvider(
-            create: (_) => SubscriptionProvider(_StubRevenueCatService()),
+          ChangeNotifierProvider<SubscriptionProvider>.value(
+            value: subscription,
+          ),
+          ChangeNotifierProvider<PaywallScheduler>.value(
+            value: PaywallScheduler(subscription),
           ),
         ],
         child: const PaycheckApp(onboardingComplete: true),

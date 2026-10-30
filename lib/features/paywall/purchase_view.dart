@@ -15,10 +15,15 @@ class PurchaseView extends StatefulWidget {
   final VoidCallback onDismiss;
   final bool hasCooldown;
 
+  /// Called after a successful purchase. When null (onboarding), the view
+  /// enters the app shell; when set (interval paywall), the caller decides.
+  final VoidCallback? onPurchaseSuccess;
+
   const PurchaseView({
     super.key,
     required this.onDismiss,
     this.hasCooldown = true,
+    this.onPurchaseSuccess,
   });
 
   @override
@@ -182,6 +187,10 @@ class _PurchaseViewState extends State<PurchaseView>
       if (entitlement != null) {
         debugPrint('purchase successfull');
         // TODO: show successfull snackbar
+        if (widget.onPurchaseSuccess != null) {
+          widget.onPurchaseSuccess!();
+          return;
+        }
         navigator.pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => MainShell()),
           (route) => false,

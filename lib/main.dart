@@ -7,6 +7,7 @@ import 'package:paycheck_calculator/core/services/remote_config.dart';
 import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
 import 'package:paycheck_calculator/features/calculator/provider/comparison_provider.dart';
 import 'package:paycheck_calculator/features/calculator/provider/profile_provider.dart';
+import 'package:paycheck_calculator/features/paywall/paywall_scheduler.dart';
 import 'package:paycheck_calculator/features/settings/settings_provider.dart';
 import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:paycheck_calculator/features/subscription/services/revenuecat_service.dart';
@@ -43,12 +44,20 @@ void main() async {
   final profilesBox = await LocalStorageService.openProfilesBox();
   final stateBox = await LocalStorageService.openStateBox();
 
-  final calculatorProvider = CalculatorProvider();
+  final paywallScheduler = PaywallScheduler(
+    subscriptionProvider,
+    stateBox: stateBox,
+  );
+  final calculatorProvider = CalculatorProvider(
+    paywallScheduler: paywallScheduler,
+  );
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => calculatorProvider),
+
+        ChangeNotifierProvider<PaywallScheduler>.value(value: paywallScheduler),
 
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
 

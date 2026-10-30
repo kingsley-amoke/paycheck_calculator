@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:paycheck_calculator/core/services/remote_config.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import 'package:paycheck_calculator/features/subscription/domain/subscription_status.dart';
@@ -62,4 +63,18 @@ class StubRevenueCatService implements RevenueCatService {
   @override
   Future<PurchaseResult> purchasePackage(Package package) =>
       throw UnimplementedError();
+}
+
+/// Remote Config stand-in: ReviewAccessService needs Firebase, which unit
+/// tests don't initialize. [enabled] simulates the review-access override.
+class FakeReviewAccess implements ReviewAccessService {
+  FakeReviewAccess({this.enabled = false});
+
+  final bool enabled;
+
+  @override
+  bool get isEnabled => enabled;
+
+  @override
+  Future<void> initialize() async {}
 }

@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:paycheck_calculator/core/services/remote_config.dart';
 import 'package:paycheck_calculator/features/paywall/paywall_scheduler.dart';
 import 'package:paycheck_calculator/features/subscription/domain/subscription_status.dart';
 import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:paycheck_calculator/features/subscription/services/revenuecat_service.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+
+import '../helpers/fake_stubs.dart';
 
 class FakeBox<T> implements Box<T> {
   final Map<dynamic, T> data = {};
@@ -25,17 +26,6 @@ class FakeBox<T> implements Box<T> {
 
   @override
   Future<void> delete(dynamic key) async => data.remove(key);
-}
-
-class _FakeReviewAccess implements ReviewAccessService {
-  _FakeReviewAccess({this.enabled = false});
-  final bool enabled;
-
-  @override
-  bool get isEnabled => enabled;
-
-  @override
-  Future<void> initialize() async {}
 }
 
 class _FreeRevenueCat implements RevenueCatService {
@@ -84,10 +74,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   SubscriptionProvider sub(RevenueCatService rc, {bool review = false}) =>
-      SubscriptionProvider(
-        rc,
-        reviewAccess: _FakeReviewAccess(enabled: review),
-      );
+      SubscriptionProvider(rc, reviewAccess: FakeReviewAccess(enabled: review));
 
   test('free user: 4 completed calculations reach the threshold', () {
     final scheduler = PaywallScheduler(sub(_FreeRevenueCat()));

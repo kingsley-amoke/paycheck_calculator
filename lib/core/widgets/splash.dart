@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/core/services/local_storage_service.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/screens/annual_projection_screen.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/screens/compare_hub_screen.dart';
-import 'package:hive/hive.dart';
 
 import '../../features/calculator/presentation/screens/home_screen.dart';
 import '../../features/settings/settings_screen.dart';
