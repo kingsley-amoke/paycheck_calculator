@@ -74,7 +74,7 @@ abstract class TaxCalculator {
       grossIncome: annualIncome,
       netIncome: netIncome,
       totalTax: totalTax,
-      effectiveTaxRate: totalTax / annualIncome,
+      effectiveTaxRate: annualIncome > 0 ? totalTax / annualIncome : 0,
       deductions: deductions,
       federalTax: mainTax,
       regionTaxAmount: regionTaxAmount,

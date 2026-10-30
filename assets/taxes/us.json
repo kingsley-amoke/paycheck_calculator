@@ -2273,7 +2273,9 @@
   "extraTaxes": [
     {
       "name": "Social Security",
-      "rate": 0.062
+      "type": "capped",
+      "rate": 0.062,
+      "cap": 184500
     },
     {
       "name": "Medicare",

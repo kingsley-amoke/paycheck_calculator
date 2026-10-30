@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paycheck_calculator/core/constants/enums.dart';
+import 'package:paycheck_calculator/data/models/tax_config.dart';
 import 'package:paycheck_calculator/domain/calculators/us_calculator.dart';
 import 'package:paycheck_calculator/domain/entities/calculation_extras.dart';
 import 'package:paycheck_calculator/domain/entities/paycheck_result.dart';
@@ -7,10 +8,11 @@ import 'package:paycheck_calculator/domain/usecases/tax_data_loader.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late TaxConfig config;
   late USCalculator calculator;
 
   setUpAll(() async {
-    final config = await TaxDataLoader.load(Country.us);
+    config = await TaxDataLoader.load(Country.us);
     calculator = USCalculator(config);
   });
 
@@ -40,6 +42,26 @@ void main() {
     expect(withNull.netIncome, plain.netIncome);
     expect(withNull.totalTax, plain.totalTax);
     expect(withNull.effectiveTaxRate, plain.effectiveTaxRate);
+  });
+
+  test('us config: Social Security carries the wage-base cap in JSON', () {
+    final ss = config.extraTaxes.singleWhere((t) => t.name == 'Social Security');
+    expect(ss.type, 'capped');
+    expect(ss.cap, isNotNull);
+    expect(ss.cap, greaterThan(0));
+  });
+
+  test('high earner: SS stops at the cap, Medicare taxes all wages', () {
+    final r = baseline(income: 250000);
+
+    // 0.062 × cap-from-JSON; recomputed here from the same config source.
+    expect(
+      lineSum(r, 'Social Security'),
+      closeTo(config.extraTaxes
+          .singleWhere((t) => t.name == 'Social Security')
+          .cap! * 0.062, 0.01),
+    );
+    expect(lineSum(r, 'Medicare'), closeTo(250000 * 0.0145, 0.01));
   });
 
   test('additional annual gross flows through gross and net', () {
@@ -101,6 +123,12 @@ void main() {
     expect(withPost.netIncome, closeTo(plain.netIncome - 1000, 0.01));
     expect(withPost.postTaxDeductions, 1000);
     expect(withPost.preTaxDeductions, 0);
+  });
+
+  test('zero income: no NaN effective tax rate', () {
+    final r = baseline(income: 0);
+    expect(r.effectiveTaxRate.isNaN, isFalse);
+    expect(r.effectiveTaxRate, 0);
   });
 
   test('monthly frequency extras annualized through engine (hourly base)', () {
