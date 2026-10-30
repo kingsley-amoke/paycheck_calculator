@@ -1,4 +1,4 @@
-const String appVersion = '1.0.0';
+const String appVersion = '1.1.0';
 const String privacyPolicyUrl = 'https://smoqdev.vercel.app/paycheck/privacy';
 
 const String playSubscriptionsUrl =
