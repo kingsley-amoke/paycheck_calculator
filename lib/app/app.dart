@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/core/config/theme.dart';
+import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/onboarding/screens/onboarding_screen.dart';
 import 'package:paycheck_calculator/features/settings/settings_provider.dart';
-import 'package:paycheck_calculator/features/subscription/provider/subscription_provider.dart';
 import 'package:provider/provider.dart';
 
 class PaycheckApp extends StatelessWidget {
-  const PaycheckApp({super.key});
+  const PaycheckApp({super.key, required this.onboardingComplete});
+
+  /// True when the user has completed onboarding in any previous session —
+  /// the bootstrapper reads `LocalStorageService.onboardingCompleteKey`.
+  final bool onboardingComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +22,7 @@ class PaycheckApp extends StatelessWidget {
       themeMode: context.watch<SettingsProvider>().isDark
           ? ThemeMode.dark
           : ThemeMode.light,
-      home: Consumer<SubscriptionProvider>(
-        builder: (_, sub, _) {
-          // if (sub.hasAccess) {
-          //   return MainShell();
-          // }
-
-          return OnboardingScreen();
-        },
-      ),
+      home: onboardingComplete ? const MainShell() : const OnboardingScreen(),
     );
   }
 }

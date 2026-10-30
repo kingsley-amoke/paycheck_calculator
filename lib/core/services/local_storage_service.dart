@@ -7,6 +7,9 @@ class LocalStorageService {
   static const String stateBoxName = 'app_state';
   static const String activeProfileKey = 'active_profile_id';
 
+  /// Set once onboarding completes; onboarding shows again only when unset.
+  static const String onboardingCompleteKey = 'onboarding_complete';
+
   static Future<Box<Map>> openProfilesBox() =>
       Hive.openBox<Map>(profilesBoxName);
 

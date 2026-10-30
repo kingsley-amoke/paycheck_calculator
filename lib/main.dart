@@ -53,7 +53,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
 
         ChangeNotifierProvider<SubscriptionProvider>.value(
-            value: subscriptionProvider),
+          value: subscriptionProvider,
+        ),
 
         ChangeNotifierProvider(
           create: (_) =>
@@ -64,7 +65,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ComparisonProvider()),
       ],
 
-      child: const PaycheckApp(),
+      child: PaycheckApp(
+        onboardingComplete:
+            stateBox.get(LocalStorageService.onboardingCompleteKey) == true,
+      ),
     ),
   );
 }

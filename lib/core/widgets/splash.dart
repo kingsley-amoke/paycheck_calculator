@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/core/services/local_storage_service.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/screens/annual_projection_screen.dart';
 import 'package:paycheck_calculator/features/calculator/presentation/screens/compare_hub_screen.dart';
+import 'package:hive/hive.dart';
 
 import '../../features/calculator/presentation/screens/home_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -14,6 +16,19 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Single funnel: any entry into the app proper (skip, purchase, or
+    // normal session) marks onboarding complete. Idempotent per session;
+    // a failed write must never take the shell down.
+    LocalStorageService.openStateBox()
+        .then((box) {
+          box.put(LocalStorageService.onboardingCompleteKey, true);
+        })
+        .catchError((_) {});
+  }
 
   late final List<Widget> _screens = [
     const HomeScreen(),
