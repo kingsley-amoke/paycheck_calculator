@@ -16,7 +16,7 @@ class CountrySelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'See your salary after tax instantly',
+          'Estimate your take-home pay',
           style: TextStyle(fontSize: 14, color: AppColors.textGray),
         ),
         const SizedBox(height: 16),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/features/calculator/presentation/widgets/save_profile_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/calculator_provider.dart';
@@ -81,12 +82,15 @@ class TakeHomeCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                // const SizedBox(height: 20),
-                // _actionButton(
-                //   Icons.bookmark_border,
-                //   'Save this calculation',
-                //   Colors.white.withValues(alpha: 0.15),
-                // ),
+                const SizedBox(height: 20),
+                _actionButton(
+                  Icons.bookmark_border,
+                  'Save this calculation',
+                  Colors.white.withValues(alpha: 0.15),
+                  onPressed: () {
+                    showSaveProfileSheet(context);
+                  },
+                ),
                 // const SizedBox(height: 10),
                 // _actionButton(
                 //   Icons.share_outlined,
@@ -102,29 +106,37 @@ class TakeHomeCard extends StatelessWidget {
   }
 }
 
-Widget _actionButton(IconData icon, String label, Color color) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.symmetric(vertical: 13),
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: Colors.white, size: 18),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
+Widget _actionButton(
+  IconData icon,
+  String label,
+  Color color, {
+  required VoidCallback onPressed,
+}) {
+  return GestureDetector(
+    onTap: onPressed,
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 13),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.white, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

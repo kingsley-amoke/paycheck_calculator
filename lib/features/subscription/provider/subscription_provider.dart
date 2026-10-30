@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:paycheck_calculator/core/services/remote_config.dart';
 import '../services/revenuecat_service.dart';
 import '../domain/subscription_status.dart';
 
@@ -6,6 +7,8 @@ class SubscriptionProvider extends ChangeNotifier {
   final RevenueCatService _service;
 
   bool isLoading = true;
+
+  final reviewAccess = ReviewAccessService();
 
   MySubscriptionInfo _info = const MySubscriptionInfo(
     status: SubscriptionStatus.unknown,
@@ -15,7 +18,7 @@ class SubscriptionProvider extends ChangeNotifier {
 
   MySubscriptionInfo get info => _info;
 
-  bool get hasAccess => _info.hasAccess;
+  bool get hasAccess => _info.hasAccess || reviewAccess.isEnabled;
   bool get isInTrial => _info.isInTrial;
 
   SubscriptionProvider(this._service);

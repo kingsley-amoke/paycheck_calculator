@@ -7,8 +7,10 @@
 /// While null, the settings tile falls back to an explanatory dialog and the
 /// app works normally without the Expense Tracker.
 class ExpenseTrackerConfig {
-  static const String? androidPackageId = null;
-  static const String? storeUrl = null;
+  static const String? androidPackageId =
+      "com.smoqdev.expense_tracker_scan_receipt";
+  static const String? storeUrl =
+      "https://play.google.com/store/apps/details?id=com.smoqdev.expense_tracker_scan_receipt";
 
   /// Test-only override for the unconfigured case.
   static String? storeUrlOverride;

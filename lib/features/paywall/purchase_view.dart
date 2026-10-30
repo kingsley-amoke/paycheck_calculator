@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:paycheck_calculator/core/services/remote_config.dart';
+import 'dart:math';
 import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/paywall/models/paywall_package.dart';
 import 'package:paycheck_calculator/features/paywall/models/product.dart';
@@ -12,7 +12,14 @@ import 'package:paycheck_calculator/features/paywall/widgets/personalized.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class PurchaseView extends StatefulWidget {
-  const PurchaseView({super.key});
+  final VoidCallback onDismiss;
+  final bool hasCooldown;
+
+  const PurchaseView({
+    super.key,
+    required this.onDismiss,
+    this.hasCooldown = true,
+  });
 
   @override
   State<PurchaseView> createState() => _PurchaseViewState();
@@ -27,17 +34,49 @@ class _PurchaseViewState extends State<PurchaseView>
 
   static const Color _accent = Color(0xFF2563EB);
 
-  final reviewAccess = ReviewAccessService();
+  // ── close button cooldown ──
+  static const double _allowCloseAfter = 5.0; // seconds
+  bool _showCloseButton = false;
+  late final AnimationController _progressController;
+
+  // final reviewAccess = ReviewAccessService();
 
   @override
   void initState() {
     super.initState();
-    print(reviewAccess.isEnabled);
-    if (reviewAccess.isEnabled) {
-      return;
-    } else {
-      _loadOfferings();
-    }
+    _loadOfferings();
+    _progressController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: (_allowCloseAfter * 1000).toInt()),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Start cooldown
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (!mounted) return;
+        _progressController.forward();
+        Future.delayed(
+          Duration(milliseconds: (_allowCloseAfter * 1000).toInt()),
+          () {
+            if (!mounted) return;
+            setState(() => _showCloseButton = true);
+          },
+        );
+      });
+    });
+    // print(reviewAccess.isEnabled);
+    // if (reviewAccess.isEnabled) {
+    //   return;
+    // } else {
+
+    // }
+  }
+
+  @override
+  void dispose() {
+    _progressController.dispose();
+
+    super.dispose();
   }
 
   Future<void> _loadOfferings() async {
@@ -155,11 +194,33 @@ class _PurchaseViewState extends State<PurchaseView>
     }
   }
 
-  void _reviewBypass() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => MainShell()),
-      (route) => false,
+  Widget _buildTopBar() {
+    return SizedBox(
+      height: 44,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (widget.hasCooldown && !_showCloseButton)
+            AnimatedBuilder(
+              animation: _progressController,
+              builder: (_, _) => SizedBox(
+                width: 24,
+                height: 24,
+                child: CustomPaint(
+                  painter: _ArcPainter(
+                    progress: _progressController.value,
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                ),
+              ),
+            )
+          else
+            GestureDetector(
+              onTap: widget.onDismiss,
+              child: const Icon(Icons.close, size: 22, color: Colors.black38),
+            ),
+        ],
+      ),
     );
   }
 
@@ -178,31 +239,31 @@ class _PurchaseViewState extends State<PurchaseView>
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      _buildTopBar(),
                       HeroPlaceholder(color: _accent),
 
                       const SizedBox(height: 24),
-                      reviewAccess.isEnabled
-                          ? const SizedBox.shrink()
-                          : PaywallProductCards(
-                              products: _packages.map((p) {
-                                return PurchaseProductDetails(
-                                  price: p.price,
-                                  productId: p.id,
-                                  duration: p.duration,
-                                  durationPlanName: p.title,
-                                  hasTrial: p.hasTrial,
-                                );
-                              }).toList(),
-                              selectedProductId: _selectedProductId,
-                              onSelect: (id) =>
-                                  setState(() => _selectedProductId = id),
-                              accent: _accent,
-                              fullAnnualPrice: _fullAnnualFromWeekly != null
-                                  ? _formatCurrency(_fullAnnualFromWeekly!)
-                                  : null,
-                              formatCurrency: _formatCurrency,
-                              savingsPercent: _percentageSaved,
-                            ),
+
+                      PaywallProductCards(
+                        products: _packages.map((p) {
+                          return PurchaseProductDetails(
+                            price: p.price,
+                            productId: p.id,
+                            duration: p.duration,
+                            durationPlanName: p.title,
+                            hasTrial: p.hasTrial,
+                          );
+                        }).toList(),
+                        selectedProductId: _selectedProductId,
+                        onSelect: (id) =>
+                            setState(() => _selectedProductId = id),
+                        accent: _accent,
+                        fullAnnualPrice: _fullAnnualFromWeekly != null
+                            ? _formatCurrency(_fullAnnualFromWeekly!)
+                            : null,
+                        formatCurrency: _formatCurrency,
+                        savingsPercent: _percentageSaved,
+                      ),
 
                       const SizedBox(height: 24),
 
@@ -210,32 +271,26 @@ class _PurchaseViewState extends State<PurchaseView>
                         isLoading: _isPurchasing,
                         label: _callToActionText,
                         accent: _accent,
-                        onTap: reviewAccess.isEnabled
-                            ? _reviewBypass
-                            : _purchase,
+                        onTap: _purchase,
                       ),
 
                       const SizedBox(height: 16),
 
-                      reviewAccess.isEnabled
-                          ? const SizedBox.shrink()
-                          : const TrialTrustText(),
+                      const TrialTrustText(),
 
                       const SizedBox(height: 8),
-                      reviewAccess.isEnabled
-                          ? const SizedBox.shrink()
-                          : PaywallFooter(
-                              onRestore: () {
-                                Purchases.restorePurchases();
-                              },
-                              onTerms: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const TermsScreen(),
-                                  ),
-                                );
-                              },
+                      PaywallFooter(
+                        onRestore: () {
+                          Purchases.restorePurchases();
+                        },
+                        onTerms: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const TermsScreen(),
                             ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -246,4 +301,32 @@ class _PurchaseViewState extends State<PurchaseView>
       ),
     );
   }
+}
+
+class _ArcPainter extends CustomPainter {
+  final double progress;
+  final Color color;
+
+  const _ArcPainter({required this.progress, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2.5
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      -pi / 2,
+      2 * pi * progress,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ArcPainter old) =>
+      old.progress != progress || old.color != color;
 }

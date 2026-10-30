@@ -1,6 +1,6 @@
 # Paycheck Calculator Feature Expansion — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Add multiple saved calculation profiles (Hive), a saved-calculations manager, saved-profile job comparison, overtime, additional income, custom deductions, an annual income projection chart, and an Expense Tracker entry point — as an extension of the existing single-calculation app.
 
@@ -66,9 +66,9 @@
 - `class CalculationProfile { String id; String name; Country country; PayFrequency payFrequency; double income; FilingStatus? filingStatus; String? regionCode; double hourlyRate; double hoursPerWeek; OvertimeInput? overtime; List<ExtraIncomeItem> incomeItems; List<UserDeduction> deductions; DateTime createdAt; DateTime updatedAt; }` with `copyWith`, `toJson` (holds `"v": 1`), `CalculationProfile.fromJson(Map)` (all values defaulted/safe-cast: unknown country/frequency → us/annually; negative numbers clamped at 0; malformed → still valid object).
 - Free function `String generateProfileId()` — `DateTime.now().microsecondsSinceEpoch.toRadixString(36)` + random suffix (no uuid dep).
 
-- [ ] Add deps to pubspec, run `flutter pub get`.
-- [ ] Write test: roundtrip preserves every field; `fromJson({'id':'x','name':'X','corrupt':true})` (missing fields) produces valid defaults; duplicate via copyWith has new id and items with equal values but distinct list instances; percentages>100 allowed (engine clamps at application); timestamp fields survive.
-- [ ] Run `flutter test test/models/calculation_profile_test.dart` → fail → implement model → pass.
+- [x] Add deps to pubspec, run `flutter pub get`.
+- [x] Write test: roundtrip preserves every field; `fromJson({'id':'x','name':'X','corrupt':true})` (missing fields) produces valid defaults; duplicate via copyWith has new id and items with equal values but distinct list instances; percentages>100 allowed (engine clamps at application); timestamp fields survive.
+- [x] Run `flutter test test/models/calculation_profile_test.dart` → fail → implement model → pass.
 
 ### Task 2: Engine extras + pay-period math
 
@@ -84,9 +84,9 @@
 - `int periodsPerYear(PayFrequency f)` → hourly:52 (40h week cycle), weekly:52, biWeekly:26, monthly:12, annually:1.
 - `List<double> payPeriodsByMonth(int year, PayFrequency f)` → 12 monthly period counts; weekly/biWeekly walk pay **dates** from Jan 1 of `year` (7/14-day steps); monthly = 1 each; annually = 1/12 each; sums must equal the year's total period count (biWeekly year-start dependent 26).
 
-- [ ] Write engine tests using US config via `TaxDataLoader.load(Country.us)` (rootBundle works under `flutter test`): baseline `calculate(income:75000, frequency: annually, filingStatus: single)` recorded; with `CalculationExtras(additionalAnnualGross: 10000, preTaxDeductionsAnnual: 5000, postTaxDeductionsAnnual: 1000)`: gross is baseline+10000; totalTax does not increase by full 10000×marginal (brackets apply); net = gross − tax − 1000; **extraTaxesTotal identical to baseline** (FICA unchanged); `extras: null` byte-for-byte identical totals to baseline (regression).
-- [ ] Pay-period test: `payPeriodsByMonth(2026, PayFrequency.biWeekly)` == `[2,2,2,2,2,2,3,2,2,2,2,2]`, sum 26; monthly == 12×1; weekly sums 52; everyPaycheck biWeekly 2026 has Jul = 3.
-- [ ] Run → fail → implement → pass.
+- [x] Write engine tests using US config via `TaxDataLoader.load(Country.us)` (rootBundle works under `flutter test`): baseline `calculate(income:75000, frequency: annually, filingStatus: single)` recorded; with `CalculationExtras(additionalAnnualGross: 10000, preTaxDeductionsAnnual: 5000, postTaxDeductionsAnnual: 1000)`: gross is baseline+10000; totalTax does not increase by full 10000×marginal (brackets apply); net = gross − tax − 1000; **extraTaxesTotal identical to baseline** (FICA unchanged); `extras: null` byte-for-byte identical totals to baseline (regression).
+- [x] Pay-period test: `payPeriodsByMonth(2026, PayFrequency.biWeekly)` == `[2,2,2,2,2,2,3,2,2,2,2,2]`, sum 26; monthly == 12×1; weekly sums 52; everyPaycheck biWeekly 2026 has Jul = 3.
+- [x] Run → fail → implement → pass.
 
 ### Task 3: Calculator input extensions + profile→inputs mapper
 
@@ -104,8 +104,8 @@
   - `CalculationExtras extrasFor(CalculationProfile p)` → additionalAnnualGross = overtimeAnnual + extraIncomeAnnual; preTax = Σ preTax items × annual gross (incl. extras); postTax = Σ post-tax items.
 - Provider `calculate()` builds the same extras from its inline fields (shared mapper: provider exposes these as a transient `CalculationProfile`-shaped input set; to stay DRY provider-level `buildExtras()` mirrors `extrasFor` math — single source: mapper functions take plain values). Exact: `CalculationExtras extrasFromInputs({required double hourlyRate, required double overtimeHoursPerPeriod, double? overtimeRate, double? multiplier, required double annualOrdinaryGross, required List<ExtraIncomeItem> incomeItems, required List<UserDeduction> userDeductions, required PayFrequency frequency})`; profile version delegates to it.
 
-- [ ] Tests: rate override precedence (explicit beats multiplier); multiplier uses hourlyRate; salaried+multiplier-only → 0; percentage deduction = pct × annual gross (pct base includes other extras); fixed + percent mix sums; oncePerYear counted once vs everyPaycheck × periods.
-- [ ] Run → implement providers/mapper → pass.
+- [x] Tests: rate override precedence (explicit beats multiplier); multiplier uses hourlyRate; salaried+multiplier-only → 0; percentage deduction = pct × annual gross (pct base includes other extras); fixed + percent mix sums; oncePerYear counted once vs everyPaycheck × periods.
+- [x] Run → implement providers/mapper → pass.
 
 ### Task 4: Hive persistence + ProfileProvider
 
@@ -124,8 +124,8 @@
   - Constructor registers `calculator.addListener(_autosave)`; `dispose()` removes. `_autosave`: if activeId != null && !_restoring && calculator inputs differ from active snapshot → `updateActiveSnapshot()` (write-through, no notify loop).
 - `main.dart`: after Firebase/RC init → `await Hive.initFlutter()`; open boxes; `ProfileProvider(calc)` created, `load()` awaited before runApp? No — runApp proceeds, `load()` awaited inside (isLoading covers UI). Provide ComparisonProvider after.
 
-- [ ] Tests with `Hive.init(t.join(tmp,'profile_test'))` fresh per test: create/saveCurrentAs → new instance loading same boxes sees profile (restart survival); rename persists; duplicate → 2 profiles, deep-copied lists (mutating copy doesn't affect original); activate switch persists accessToken; delete active → next remaining becomes active; delete last → activeId null, calculator inputs unchanged; malformed entry in box (e.g. `{'id': 'bad'}` non-map garbage `{}`) is skipped, others load; save/put awaited before state list mutation (checked by observing returned future completes before `profiles.length` changes — assert order with a box spy via injected mock).
-- [ ] Run → implement → pass.
+- [x] Tests with `Hive.init(t.join(tmp,'profile_test'))` fresh per test: create/saveCurrentAs → new instance loading same boxes sees profile (restart survival); rename persists; duplicate → 2 profiles, deep-copied lists (mutating copy doesn't affect original); activate switch persists accessToken; delete active → next remaining becomes active; delete last → activeId null, calculator inputs unchanged; malformed entry in box (e.g. `{'id': 'bad'}` non-map garbage `{}`) is skipped, others load; save/put awaited before state list mutation (checked by observing returned future completes before `profiles.length` changes — assert order with a box spy via injected mock).
+- [x] Run → implement → pass.
 
 ### Task 5: Comparison orchestration
 
@@ -137,8 +137,8 @@
 - `class ComparisonRow { final CalculationProfile profile; final RegionTax? region; final PaycheckResult result; }`
 - `ComparisonProvider extends ChangeNotifier`: `final List<String> selectedIds = [];` `int get selectionCount`; `void toggle(String id)` (max 4, documented cap); `void remove(String id)`; `void clear()`; `Future<List<ComparisonRow>> computeRows(List<CalculationProfile> allProfiles)` — engine per profile: `TaxCalculatorFactory.get(p.country)`, region resolved from `TaxDataLoader.load(p.country).regions` by `regionCode`, `calculate(income: p.income, frequency: p.payFrequency, filingStatus: p.filingStatus, region: resolved, extras: extrasFor(p))`; **does not touch CalculatorProvider/ProfileProvider state**.
 
-- [ ] Tests: two real profiles (same country, different income/OT) → rows' results differ in net as engine dictates; toggle cap enforced at 4; compute again after removing selection returns fewer rows; profile objects' `updatedAt`/lists unchanged after compute (no mutation); zero selections → empty rows.
-- [ ] Run → implement → pass.
+- [x] Tests: two real profiles (same country, different income/OT) → rows' results differ in net as engine dictates; toggle cap enforced at 4; compute again after removing selection returns fewer rows; profile objects' `updatedAt`/lists unchanged after compute (no mutation); zero selections → empty rows.
+- [x] Run → implement → pass.
 
 ### Task 6: Annual projection
 
@@ -150,8 +150,8 @@
 - `class MonthlyProjectionPoint { final int month; final double gross; final double net; }`
 - `List<MonthlyProjectionPoint> projectYear(CalculationProfile p, PaycheckResult annualResult, {int? year})` → 12 points; per-month nets distributed by `payPeriodsByMonth` (period net = `annualResult.netIncome / periodsInYear`); monthly frequency → 1 paycheck per month; annually → 1/12 each month (salary accrues evenly); **documented**: one-time income items and overtime are embedded in the engine's annual result and therefore spread across their containing paydays (assumption note shipped in the screen footer).
 
-- [ ] Tests: biWeekly 2026 uses `[2,2,...,3,...]` counts; `sum(monthly.net) == annualResult.netIncome` (±1e-6); monthly frequency → each month `= net/12`… (equal); annual frequency → equal accrual; year param changes distribution for a year where Jan-1 anchoring shifts (2027 biWeekly sums 26).
-- [ ] Run → implement → pass.
+- [x] Tests: biWeekly 2026 uses `[2,2,...,3,...]` counts; `sum(monthly.net) == annualResult.netIncome` (±1e-6); monthly frequency → each month `= net/12`… (equal); annual frequency → equal accrual; year param changes distribution for a year where Jan-1 anchoring shifts (2027 biWeekly sums 26).
+- [x] Run → implement → pass.
 
 ### Task 7: Feature gating + Expense Tracker config + settings entry
 
@@ -165,8 +165,8 @@
 - `class ExpenseTrackerConfig { static const String? androidPackageId = null; /* TODO(dev): supply before shipping (spec §12) */ static const String? storeUrl = null; static bool get isConfigured => storeUrl != null; }`
 - Settings tile: icon `account_balance_wallet_outlined` teal, title **"Manage Your Budget"**, subtitle **"Track your expenses and manage your budget with our Expense Tracker app."** — onTap: `ExpenseTrackerConfig.isConfigured ? openUrl(storeUrl) : dialog('Budgeting lives in our Expense Tracker app. Its store destination is not configured in this build yet.')` (clear fallback; app keeps working; no data ever sent).
 
-- [ ] Widget test: pump SettingsScreen with providers → tap tile → dialog text visible; with config stubbed non-null (via `ExpenseTrackerConfig.storeUrl` runtime override hook `static String? Function()` `storeUrlOverride` for tests) → no dialog (would call openUrl; assert dialog absent only — launcher not invoked in test env).
-- [ ] Run → implement → pass.
+- [x] Widget test: pump SettingsScreen with providers → tap tile → dialog text visible; with config stubbed non-null (via `ExpenseTrackerConfig.storeUrl` runtime override hook `static String? Function()` `storeUrlOverride` for tests) → no dialog (would call openUrl; assert dialog absent only — launcher not invoked in test env).
+- [x] Run → implement → pass.
 
 ### Task 8: Home screen sections (overtime, additional income, deductions) + header entries
 
@@ -180,8 +180,8 @@
 - Overtime section: shows hours/period, resolved rate rule (`explicit` vs `× multiplier` chips), clear button; income section: item rows (name, amount, occurrence icon) add/edit/remove; deductions grouped **Pre-tax** / **Post-tax** with % / fixed badge.
 - Save-current dialog: name field (default "My Calculation <n>"), created via ProfileProvider.saveCurrentAs; denied (non-premium over limit) → `SubscriptionPlansScreen`.
 
-- [ ] Widget tests: add income item via dialog → item row appears and take-home value changes; remove → disappears; add pre- vs post-tax deduction → grouped under right header; overtime multiplier without rate shows validation error; save dialog creates profile (ProfileProvider state count +1).
-- [ ] Run → implement → pass.
+- [x] Widget tests: add income item via dialog → item row appears and take-home value changes; remove → disappears; add pre- vs post-tax deduction → grouped under right header; overtime multiplier without rate shows validation error; save dialog creates profile (ProfileProvider state count +1).
+- [x] Run → implement → pass.
 
 ### Task 9: SavedCalculationsScreen
 
@@ -195,8 +195,8 @@
 - Empty state: illustration-less centered column "No saved calculations yet" + "Save your current calculation" button (runs save dialog). Top bar: back arrow + "Saved Calculations" + `IconButton(Icons.add)` → save dialog (gated). Bottom bar for selection flow lives in Compare screen instead (no checkboxes here).
 - Loading state: `isLoading` → `CircularProgressIndicator`.
 
-- [ ] Widget tests: empty state text; seeded Hive → 2 cards with names and "Active" chip; open/activate switches hex activeId; rename updates card; delete with confirm removes card; duplicate adds "(copy)" card; overflow menu lists 5 actions.
-- [ ] Run → implement → pass. Wire Home header buttons in this task.
+- [x] Widget tests: empty state text; seeded Hive → 2 cards with names and "Active" chip; open/activate switches hex activeId; rename updates card; delete with confirm removes card; duplicate adds "(copy)" card; overflow menu lists 5 actions.
+- [x] Run → implement → pass. Wire Home header buttons in this task.
 
 ### Task 10: CompareCalculationsScreen
 
@@ -210,8 +210,8 @@
 - Table: vertical metric rows — per profile a column; columns in horizontal `SingleChildScrollView` (narrow-screen safe). Rows: Gross per pay period (annualGross/periods), Additional income (per period), Federal income tax (annual→per-period? show **per pay period** beside annual in subtitle), Region/state tax (label = actual region name; hidden row entirely when none of the profiles has region tax), Social Security/Medicare/extra (sum of `extraTaxesTotal`, hidden when zero everywhere), Pre-tax deductions, Post-tax deductions, Estimated net pay, Effective withholding rate (`result.effectiveTaxRate`, labeled), Annual gross, Annual net. Each numeric cell shows delta chip vs best column for income rows (▲ higher) and neutral ± for tax rows (no "better" claim).
 - Remove profile via chip's ✕.
 
-- [ ] Widget tests: 3 seeded profiles → select 2 → table renders with names, net values from engine (assert engine-consistent, not magic numbers), "Higher net pay" names the engine-max profile; clear selection → hint state; deleting selected profile mid-session doesn't crash (chip filter).
-- [ ] Run → implement → pass.
+- [x] Widget tests: 3 seeded profiles → select 2 → table renders with names, net values from engine (assert engine-consistent, not magic numbers), "Higher net pay" names the engine-max profile; clear selection → hint state; deleting selected profile mid-session doesn't crash (chip filter).
+- [x] Run → implement → pass.
 
 ### Task 11: Annual Projectionscreen + chart
 
@@ -224,8 +224,8 @@
 - Screen: `MonthlyBarsChart` (CustomPaint, 12 month bars, value-scaled, month letters J–D beneath, legend chips for selectable series: **Net**, **Gross**), annual totals row (gross/net), assumptions footer ("Projection distributes {frequency} paydays by calendar pay dates; withholding is the engine's annualized estimate; taxes/credits not modeled."). Profile source = active profile (doc note if none) — simplest that stays honest.
 - Responsive: chart in `AspectRatio` ≥ 16:9, bars recompute on layout width; `LayoutBuilder` used.
 
-- [ ] Widget test: pump with seeded active profile → 12 bars painted (find.byType(CustomPaint) with painter `MonthlyBarsChartPainter`), toggle Gross chip → second series legend state changes; totals text uses `CurrencyFormatter`.
-- [ ] Run → implement → pass.
+- [x] Widget test: pump with seeded active profile → 12 bars painted (find.byType(CustomPaint) with painter `MonthlyBarsChartPainter`), toggle Gross chip → second series legend state changes; totals text uses `CurrencyFormatter`.
+- [x] Run → implement → pass.
 
 ### Task 12: main.dart wiring, smoke test fix, full validation
 
@@ -233,10 +233,10 @@
 - Modify: `lib/main.dart` (Hive initflutter + boxes + ProfileProvider/ComparisonProvider into MultiProvider), `test/widget_test.dart` (replace broken `MyApp` smoke with `PaycheckApp` onboarding smoke), `lib/core/config/expense_tracker_config.dart` finalized comments
 - Test: full suite
 
-- [ ] `dart format lib test` (or `flutter format`), `flutter analyze` → 3 baseline issues or better, no new.
-- [ ] `flutter test` all → all pass.
-- [ ] `flutter build apk --debug` (or report environment limitation honestly).
-- [ ] Commit.
+- [x] `dart format lib test` (or `flutter format`), `flutter analyze` → 3 baseline issues or better, no new.
+- [x] `flutter test` all → all pass.
+- [x] `flutter build apk --debug` (or report environment limitation honestly).
+- [x] Commit.
 
 ## Deferred (documented, honest)
 

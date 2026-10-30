@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paycheck_calculator/core/constants/app_colors.dart';
+import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/subtitle_text.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/title_text.dart';
@@ -20,14 +21,25 @@ class _GeneratingPageState extends State<GeneratingPage> {
     _generateIncome();
   }
 
+  void _reviewBypass() {
+    print('Bypassing review access and navigating to main shell...');
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => MainShell()),
+      (route) => false,
+    );
+  }
+
   Future<void> _generateIncome() async {
     await context.read<CalculatorProvider>().calculate();
     await Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
 
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const PurchaseView()),
+        MaterialPageRoute(
+          builder: (_) => PurchaseView(onDismiss: () => _reviewBypass()),
+        ),
       );
     });
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/core/widgets/splash.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/cta_button.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/page_indicator.dart';
 import 'package:paycheck_calculator/features/onboarding/widgets/subtitle_text.dart';
@@ -127,6 +128,14 @@ class _TaxInsightsScreenState extends State<TaxInsightsScreen>
     ).animate(CurvedAnimation(parent: _pulse, curve: Curves.easeInOut));
   }
 
+  void _reviewBypass() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => MainShell()),
+      (route) => false,
+    );
+  }
+
   @override
   void dispose() {
     _stagger.dispose();
@@ -234,7 +243,13 @@ class _TaxInsightsScreenState extends State<TaxInsightsScreen>
                     child: CTAButton(
                       onTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => PurchaseView()),
+                          MaterialPageRoute(
+                            builder: (_) => PurchaseView(
+                              onDismiss: () {
+                                _reviewBypass();
+                              },
+                            ),
+                          ),
                         );
                       },
                       pulseController: _stagger,

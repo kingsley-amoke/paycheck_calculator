@@ -1,58 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:paycheck_calculator/data/models/calculation_profile.dart';
+import 'package:paycheck_calculator/domain/usecases/profile_inputs.dart';
+import 'package:paycheck_calculator/features/calculator/presentation/widgets/section_scaffold.dart';
+import 'package:paycheck_calculator/features/calculator/provider/calculator_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../data/models/calculation_profile.dart';
-import '../../../../domain/usecases/profile_inputs.dart';
-import '../../provider/calculator_provider.dart';
-import 'section_scaffold.dart';
-
-/// Overtime input: hours per paycheck plus either an explicit OT rate OR
-/// a multiplier of the regular hourly rate — never both applied.
-class OvertimeSection extends StatelessWidget {
-  const OvertimeSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final calc = context.watch<CalculatorProvider>();
-    final hasOvertime = calc.overtimeHoursPerPeriod > 0;
-
-    String summary = 'Overtime hours per paycheck. ';
-    if (hasOvertime) {
-      final rate = resolvedRateFor(
-        hourlyRate: calc.hourlyRate,
-        overtime: OvertimeInput(
-          hoursPerPeriod: calc.overtimeHoursPerPeriod,
-          explicitRate: calc.overtimeRate,
-          multiplier: calc.overtimeMultiplier,
-        ),
-      );
-      final basis = calc.overtimeRate != null
-          ? 'explicit rate'
-          : '${calc.overtimeMultiplier} × hourly rate';
-      summary =
-          '${calc.overtimeHoursPerPeriod.toStringAsFixed(0)} h @ '
-          '${rate.toStringAsFixed(2)}/h ($basis).';
-    } else {
-      summary += calc.hourlyRate > 0
-          ? 'No overtime entered.'
-          : 'Requires an hourly rate or an explicit OT rate.';
-    }
-
-    return SectionCard(
-      label: 'OVERTIME',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            summary,
-            style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-          ),
-          addRowButton(() => showOvertimeSheet(context, calc)),
-        ],
-      ),
-    );
-  }
-}
 
 void showOvertimeSheet(BuildContext context, CalculatorProvider calc) {
   final hoursController = TextEditingController(
@@ -165,4 +116,221 @@ void showOvertimeSheet(BuildContext context, CalculatorProvider calc) {
       ),
     ),
   );
+}
+
+class OvertimeSection extends StatelessWidget {
+  const OvertimeSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final calc = context.watch<CalculatorProvider>();
+    final hasOvertime = calc.overtimeHoursPerPeriod > 0;
+
+    String summary;
+
+    if (hasOvertime) {
+      final rate = resolvedRateFor(
+        hourlyRate: calc.hourlyRate,
+        overtime: OvertimeInput(
+          hoursPerPeriod: calc.overtimeHoursPerPeriod,
+          explicitRate: calc.overtimeRate,
+          multiplier: calc.overtimeMultiplier,
+        ),
+      );
+
+      final basis = calc.overtimeRate != null
+          ? 'Custom rate'
+          : '${calc.overtimeMultiplier}× hourly rate';
+
+      summary =
+          '${calc.overtimeHoursPerPeriod.toStringAsFixed(0)} hours per '
+          'paycheck at ${rate.toStringAsFixed(2)}/h';
+
+      return _overtimeCard(
+        context: context,
+        calc: calc,
+        hasOvertime: true,
+        title: 'Overtime',
+        summary: summary,
+        detail: basis,
+      );
+    }
+
+    summary = calc.hourlyRate > 0
+        ? 'Add extra hours to include overtime in your estimate.'
+        : 'Enter an hourly rate or use a custom overtime rate.';
+
+    return _overtimeCard(
+      context: context,
+      calc: calc,
+      hasOvertime: false,
+      title: 'Overtime',
+      summary: summary,
+      detail: null,
+    );
+  }
+
+  Widget _overtimeCard({
+    required BuildContext context,
+    required CalculatorProvider calc,
+    required bool hasOvertime,
+    required String title,
+    required String summary,
+    required String? detail,
+  }) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: hasOvertime
+              ? colors.primary.withValues(alpha: 0.35)
+              : colors.outlineVariant,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  Icons.more_time_rounded,
+                  size: 25,
+                  color: colors.onPrimaryContainer,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'Extra hours worked',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: hasOvertime
+                      ? colors.primaryContainer
+                      : colors.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  hasOvertime ? 'Added' : 'Optional',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: hasOvertime
+                        ? colors.onPrimaryContainer
+                        : colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: colors.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  hasOvertime
+                      ? Icons.check_circle_outline_rounded
+                      : Icons.info_outline_rounded,
+                  size: 20,
+                  color: hasOvertime ? colors.primary : colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        summary,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: hasOvertime
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          height: 1.4,
+                          color: colors.onSurface,
+                        ),
+                      ),
+                      if (detail != null) ...[
+                        const SizedBox(height: 5),
+                        Text(
+                          detail,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: hasOvertime
+                ? OutlinedButton.icon(
+                    onPressed: () => showOvertimeSheet(context, calc),
+                    icon: const Icon(Icons.edit_outlined, size: 19),
+                    label: const Text('Edit overtime'),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  )
+                : FilledButton.icon(
+                    onPressed: () => showOvertimeSheet(context, calc),
+                    icon: const Icon(Icons.add_rounded, size: 21),
+                    label: const Text('Add overtime'),
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
 }
