@@ -35,11 +35,11 @@ abstract class TaxCalculator {
     double allowance = getPersonalAllowance(annualIncome, filingStatus);
     taxableIncome -= allowance;
 
-    // Apply region-specific deductions (hook)
-    taxableIncome = applyRegionDeductions(taxableIncome, filingStatus, region);
-
     // Pre-tax user deductions (401k/HSA/…) reduce income-tax wages.
     // The payroll-tax base below is intentionally NOT reduced by them.
+    // Region deductions apply to the region tax base only (see
+    // calculateRegionTax) — a state/personal exemption never reduces the
+    // main income-tax base.
     taxableIncome -= extrasAnnual.preTaxDeductionsAnnual;
     taxableIncome = taxableIncome.clamp(0, double.infinity);
 
@@ -127,17 +127,6 @@ abstract class TaxCalculator {
     return allowance.clamp(0, config.personalAllowance!.amount);
   }
 
-  double applyRegionDeductions(
-    double taxableIncome,
-    FilingStatus? filingStatus,
-    RegionTax? region,
-  ) {
-    if (region == null) return taxableIncome;
-    taxableIncome -= region.standardDeduction?[filingStatus?.name] ?? 0;
-    taxableIncome -= region.personalExemption?[filingStatus?.name] ?? 0;
-    return taxableIncome;
-  }
-
   double calculateBrackets(double income, List<TaxBracket> brackets) {
     double tax = 0;
     for (var b in brackets) {
@@ -159,6 +148,14 @@ abstract class TaxCalculator {
     return deductions;
   }
 
+  /// Region's own deduction (standard deduction + personal exemption) for a
+  /// filing status — applies to the region tax base only.
+  double regionDeductionsFor(RegionTax? region, FilingStatus? filingStatus) {
+    if (region == null) return 0;
+    return (region.standardDeduction?[filingStatus?.name] ?? 0).toDouble() +
+        (region.personalExemption?[filingStatus?.name] ?? 0).toDouble();
+  }
+
   double calculateRegionTax(
     double taxableIncome,
     double annualIncome,
@@ -169,17 +166,27 @@ abstract class TaxCalculator {
     if (region == null) return 0;
 
     double regionTaxAmount = 0;
+    final regionBase =
+        (taxableIncome - regionDeductionsFor(region, filingStatus))
+            .clamp(0, double.infinity)
+            .toDouble();
 
     if (region.type == "flat") {
-      regionTaxAmount = annualIncome * (region.rate ?? 0);
+      // Flat regions tax their own (region-deduction-reduced) income base,
+      // not the federal taxable base and not the raw gross income.
+      regionTaxAmount =
+          ((annualIncome - regionDeductionsFor(region, filingStatus))
+                      .clamp(0, double.infinity) *
+                  (region.rate ?? 0))
+              .toDouble();
     } else if (region.filingStatuses != null) {
       final statusBrackets =
           region.filingStatuses![filingStatus?.name]?.brackets;
       if (statusBrackets != null) {
-        regionTaxAmount = calculateBrackets(taxableIncome, statusBrackets);
+        regionTaxAmount = calculateBrackets(regionBase, statusBrackets);
       }
     } else if (region.brackets != null) {
-      regionTaxAmount = calculateBrackets(taxableIncome, region.brackets!);
+      regionTaxAmount = calculateBrackets(regionBase, region.brackets!);
     }
 
     deductions.add(
